@@ -1,9 +1,3 @@
-#demoContainer {
-    position:relative;
-}
-#container {
-    width:1330px;
-}
 .callButton {
     float:left;
 }
@@ -16,8 +10,8 @@
 #selfVideo {
     volume: 0;
     position:absolute;
-    left: 10px;
-    top:10px;
+    top: 0px;
+    margin-left: 0px;
     z-index: 2;
     opacity: 0.8;
     height:250px;
@@ -28,8 +22,8 @@
     border: 1px solid gray;
 }
 #callerVideo {
-    height:720px;
-    width:1280px;
+    height:100%;
+    width:100%;
 }
 .closeButton {
     position:absolute;
