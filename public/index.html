@@ -49,13 +49,37 @@
         </nav>
         </section>
 
-        <div id="container">
-            <div id="header">
-                <!-- <a href="index.html"><img id="logo_easyrtc" src="images/easyrtc_logo.png" alt="EasyRTC" style="" /></a> -->
-            </div>
+        <div class="content">
+        <div class="robot-control-panel">
+          <div class="robot-info-bar">
+              <div class="battery-info">
+                  <i class="fa fa-battery-full" style="margin-right: 5px"></i><p>50%</p>
+              </div>
+          </div>
+          <div class="robot-controller">
+              <div class="robot-control-bar">
+                <input type="range" min="1" max="100" value="50" class="slider" orient="vertical" id="myRange">
+                <br>
+                <div id="iam">Not yet connected...</div>
+                <strong>Connection</strong>
+                <div id="otherClients"></div>
+                <button class="">Start</button>
+              </div>
+              <div class="robot-video-streaming">
+                <div id="videos">
+                  <div>
+                      <video autoplay="autoplay" id="callerVideo"></video>
+                      <video class="easyrtcMirror" autoplay="autoplay" id="selfVideo" muted="true" volume="0" ></video>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- <div id="container">
             <div id="main">
-                <!-- Main Content -->
-                <!--show-->
+
                 <h1 class="center">nodejs-webrtc-video-stream</h1>
                 <p class="center">Quality HD 720P</p>
                 <hr>
@@ -73,17 +97,15 @@
                             <video autoplay="autoplay" id="callerVideo"></video>
                             <video  class="easyrtcMirror" autoplay="autoplay" id="selfVideo" muted="true" volume="0" ></video>
                         </div>
-                        <!-- each caller video needs to be in it's own div so it's close button can be positioned correctly -->
                     </div>
                 </div>
-                <!--hide-->
+
                 <br style="clear:both;" />
                 <hr />
 
 
-                <!-- End Main Content -->
             </div>
-        </div>
+        </div> -->
         <!--show-->
     </body>
 </html>
