@@ -1,0 +1,105 @@
+.content .card {
+    background: white;
+    width: 100%;
+    height: inherit;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.content .card #update-personal-info-button{  
+    margin: 10px 0px 10px 0px;   
+    width: 50%;
+}
+
+.content .card h4 {
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+.profile-personal-info {
+    display: flex;
+    margin-top: 20px;
+}
+
+.profile-personal-info .profile-image{
+    background: gray;
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    border-radius: 50%;
+}
+
+.profile-personal-info table{
+    margin: 10px;
+    margin-left: 40px;
+}
+
+.profile-personal-info table {
+    width: 50%;    
+}
+
+.profile-personal-info .profile-attributes tr td {
+    padding: 0px;
+}
+ 
+.profile-personal-info .profile-attributes .input-fields{    
+    color: #505050;
+    margin: 5px;
+    padding: 5px;
+    width: 250px;    
+}
+
+.profile-personal-info .profile-attributes .input-fields:read-only{
+    background-color: #EDEDED; 
+    border:2px solid #DCDCDC;
+}
+
+.profile-personal-info .profile-attributes .input-fields:focus {
+    outline: none !important;
+    border:2px solid #04C8E1;  
+}
+
+/*
+.profile-personal-info .profile-attributes .input-text-area {
+    font-family: 'Lato', sans-serif;
+    color: #505050;
+    margin: 5px;
+    padding: 5px;
+    width: 69%;
+}
+    
+.profile-personal-info .profile-attributes .input-text-area:focus {
+    outline: none !important;
+    border:1px solid #04C8E1;  
+}
+*/
+
+.profile-personal-info .profile-attributes .edit-pen {
+    background: transparent;
+    color: gray;
+}
+
+.profile-personal-info .profile-attributes .edit-pen:hover{
+    color: #04C8E1;
+}
+
+.account-settings table {
+    margin-left: 210px;
+}
+
+.account-settings #update-account-button{
+    margin: 10px 0px 10px 0px;
+    width: 50%;
+}
+
+.account-settings #change-password{
+    background: #FFC300;
+    margin: 10px 0px 10px 0px;
+    width: 50%;
+}
+
+.account-settings #change-password:hover {
+    background: #F39C12;
+}
+
+

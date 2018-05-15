@@ -1,0 +1,134 @@
+a {
+    text-decoration: none;
+}
+
+body {
+    background: #F4F6F9;
+}
+
+.content-box {
+    display: flex;
+    margin: 30px;
+/*    box-shadow: 2px 4px 20px #888888;*/
+    height: 600px;
+    background-color: white;
+}
+
+.left-panel {
+    font-family: 'Lato', sans-serif;
+    text-align: center;    
+    height: 100%;   
+    width: 50%;
+    background: gray;
+}
+
+.left-panel .text-content {   
+    margin-top: 30%;
+}
+
+.left-panel .text-content h2 {
+    font-size: 2em;
+    padding: 5px;
+}
+
+.left-panel .text-content h3 {
+    font-size: 1.5em;
+     padding: 5px;
+}
+
+.left-panel .text-content h4 {
+    font-size: 1.2em;
+     padding: 5px;
+}
+
+
+.right-panel {    
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    height: 50%;
+    margin: auto;
+    width: 50%;        
+}
+
+.right-panel .text-content{
+    visibility: hidden;   
+    height: 0px;
+}
+
+.right-panel h2 {    
+    color: #505050;
+    font-size: 1.5em;    
+}
+
+.login-panel {
+    margin-top: 20px;
+}
+
+.login-panel .input-fields{
+    color: #505050;
+    margin: 5px;
+    padding: 8px;
+    width: 250px;    
+    border:1px solid 747474;
+}
+
+.login-panel .input-fields:focus {
+    outline: none !important;
+    border:2px solid #04C8E1;  
+}
+
+.login-panel #login-button{
+    background-color: #04C8E1;
+    color: white;
+    font-weight: 700;
+    padding: 8px;
+    width: 270px;;
+    margin: 5px;
+    margin-top: 15px;
+    border: 0px;
+    border-radius: 2px;
+}
+
+.login-panel #login-button:hover{
+    background-color: #0E9BAD;
+    transition: 0.4s ease;
+}
+
+.right-panel .no-account-panel {
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: #505050;
+}
+
+.right-panel .no-account-panel a{
+    color: #0E9BAD;
+}
+
+.right-panel .no-account-panel a:hover {
+    color: #117380;
+    transition: 0.3s ease;
+}
+
+@media (max-width: 699px) {
+    .content-box {
+        margin: 2%;
+    }
+    .left-panel {
+        width: 0px;
+        visibility:hidden;
+    }
+    .right-panel {
+        width: 100%;
+    }
+    .right-panel .text-content{      
+       color: #505050;
+       height: auto;
+       width: 80%;
+       margin: auto;
+       visibility: visible;
+       padding-bottom: 20px;
+       margin-bottom: 15px;
+       border-bottom: 1px solid #A2A2A2;
+    }
+    
+}
