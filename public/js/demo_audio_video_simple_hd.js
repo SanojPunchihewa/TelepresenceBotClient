@@ -46,15 +46,16 @@ function convertListToButtons (roomName, data, isPrimary) {
     clearConnectList();
     var otherClientDiv = document.getElementById('otherClients');
     for(var easyrtcid in data) {
+
         var button = document.createElement('button');
+        button.innerHTML = "Start";
         button.onclick = function(easyrtcid) {
             return function() {
                 performCall(easyrtcid);
             };
         }(easyrtcid);
-
-        var label = document.createTextNode(easyrtc.idToName(easyrtcid));
-        button.appendChild(label);
+        // var label = document.createTextNode(easyrtc.idToName(easyrtcid));
+        // button.appendChild(label);
         button.className = "callbutton";
         otherClientDiv.appendChild(button);
     }
@@ -76,7 +77,7 @@ function performCall(otherEasyrtcid) {
 
 function loginSuccess(easyrtcid) {
     selfEasyrtcid = easyrtcid;
-    document.getElementById("iam").innerHTML = "I am <b>" + easyrtc.cleanId(easyrtcid) + "</b>";
+    document.getElementById("iam").innerHTML = "Connection Successful</b>";
 }
 
 
