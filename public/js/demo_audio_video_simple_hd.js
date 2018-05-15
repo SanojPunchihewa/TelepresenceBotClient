@@ -49,14 +49,14 @@ function convertListToButtons (roomName, data, isPrimary) {
 
         var button = document.createElement('button');
         button.innerHTML = "Start";
-        button.onclick = function(easyrtcid) {
+        button.onclick = function(easyrtcid) {          
             return function() {
                 performCall(easyrtcid);
             };
         }(easyrtcid);
         // var label = document.createTextNode(easyrtc.idToName(easyrtcid));
         // button.appendChild(label);
-        button.className = "callbutton";
+        button.className = "callButton";
         otherClientDiv.appendChild(button);
     }
 }
