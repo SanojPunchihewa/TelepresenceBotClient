@@ -1,0 +1,113 @@
+#sideMenu {
+    width: auto;
+}
+
+#sideMenu nav .align-top {
+    visibility: hidden;
+    width: 0;
+}
+
+#sideMenu nav a {
+    font-size: 0;
+    padding: 20px;
+}
+
+#sideMenu nav a .fa {
+    margin: 0;
+    visibility: visible;
+}
+
+#sideMenu nav a:hover{
+    background: #282639;
+    border-left: 5px solid #04C8E1;
+    padding: 20px 20px 20px 15px;
+}
+
+#sideMenu nav .active {
+    background: #282639;
+    border-left: 5px solid #04C8E1;
+    padding: 20px 20px 20px 15px;
+}
+
+header {
+    margin-left: 65px;
+}
+
+.content {
+    margin-left: 65px;
+}
+
+.content .robot-control-panel {
+    background: white;
+    width: 100%;
+    height: 620px;
+}
+
+.content .robot-control-panel .robot-info-bar{
+    background: black;
+    width: 100%;
+    height: 30px;
+    color: white;
+}
+
+.content .robot-control-panel .robot-info-bar .battery-info{
+    margin-top: 6px;
+    margin-right: 10px;
+    float: right;
+    display: flex;
+}
+
+.content .robot-control-panel .robot-controller{
+    display: flex;
+}
+
+.content .robot-control-panel .robot-control-bar {
+    width: 20%;
+    margin: auto;
+    height: inherit;
+    text-align: center;
+    background: blue;
+}
+
+.content .robot-control-panel .robot-control-bar .slider {
+    margin-top: 80px;
+   -webkit-appearance: none;
+    transform: rotateZ(270deg);
+    height: 10px;
+    border-radius: 10px;
+    background: #AEB6BF  ;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-bottom: 90px;
+}
+
+.content .robot-control-panel .robot-control-bar .slider:hover {
+    opacity: 1;
+}
+
+.content .robot-control-panel .robot-control-bar .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #04C8E1;
+    cursor: pointer;
+}
+
+.content .robot-control-panel .robot-control-bar .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.content .robot-control-panel .robot-video-streaming {
+    float: right;
+    background: gray;
+    width: 80%;
+    height: 590px;
+}

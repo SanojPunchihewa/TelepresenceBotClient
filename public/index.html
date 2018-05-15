@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Telepresence | Robot</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <!-- Basic Styling -->
+        <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400" rel="stylesheet">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/style-reset.css">
+        <link rel="stylesheet" href="css/style-dashboard.css">
+        <link rel="stylesheet" href="css/style-robot-control-panel.css">
+
+        <!-- easyRTC styling -->
+        <link rel="stylesheet" type="text/css" href="css/landing.css" />
+        <link rel="stylesheet" type="text/css" href="css/demo_audio_video_simple_hd.css" />
+
+        <!-- Prettify Code -->
+        <script type="text/javascript" src="js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="js/prettify/loadAndFilter.js"></script>
+        <script type="text/javascript" src="js/prettify/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/prettify/prettify.css" />
+
+        <!-- easyRTC javascript -->
+        <script src="//localhost:8080/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="//localhost:8080/easyrtc/easyrtc.js"></script>
+        <script type="text/javascript" src="js/demo_audio_video_simple_hd.js"></script>
+
+    </head>
+    <body  onload="connect();">
+      <!-- <div id="container">
+            <div id="main">
+                <h1 class="center">nodejs-webrtc-video-stream</h1>
+                <p class="center">Quality HD 720P</p>
+                <hr>
+
+                <div id="demoContainer">
+                   <div id="connectControls">
+                        <div id="iam">Not yet connected...</div>
+                        <br />
+                        <strong>Connected users:</strong>
+                        <div id="otherClients"></div>
+                    </div>
+                    <div id="videos">
+
+                        <div style="position:relative;float:left;" width="1282" height="722">
+                            <video autoplay="autoplay" id="callerVideo"></video>
+                            <video  class="easyrtcMirror" autoplay="autoplay" id="selfVideo" muted="true" volume="0" ></video>
+                        </div>
+
+                    </div>
+                </div>
+
+                <br style="clear:both;" />
+                <hr />
+
+            </div>
+        </div> -->
+      <section id="sideMenu">
+        <nav>
+            <div class="align-top">
+                <h2>Telepresence Robot</h2>
+                <h3>Department of Computer Engineering</h3>
+                <h4>University of Peradeniya</h4>
+            </div>
+            <a href="dashBoard.html" class="active"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+            <a href="profile.html"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
+            <a href="#"><i class="fa fa-bell" aria-hidden="true"></i>Notifications</a>
+            <div class="align-bottom">
+                <a href="#"><i class="fa fa-sign-out"></i>Sign Out</a>
+            </div>
+        </nav>
+      </section>
+      <div class="content">
+        <div class="robot-control-panel">
+          <div class="robot-info-bar">
+              <div class="battery-info">
+                  <i class="fa fa-battery-full" style="margin-right: 5px"></i><p>50%</p>
+              </div>
+          </div>
+          <div class="robot-controller">
+              <div class="robot-control-bar">
+                <input type="range" min="1" max="100" value="50" class="slider" orient="vertical" id="myRange">
+                <br>
+                <div id="iam">Not yet connected...</div>
+                <strong>Connection</strong>
+                <div id="otherClients"></div>
+                <button class="">Start</button>
+              </div>
+              <div class="robot-video-streaming">
+                <div id="videos">
+                  <div>
+                      <video autoplay="autoplay" id="callerVideo"></video>
+                      <video class="easyrtcMirror" autoplay="autoplay" id="selfVideo" muted="true" volume="0" ></video>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </body>
+</html>
