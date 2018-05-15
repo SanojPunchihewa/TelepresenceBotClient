@@ -14,21 +14,22 @@
     height:50px;
 }
 #selfVideo {
-    top: 50px;
-    background: red;
-    position: absolute;
     volume: 0;
+    position:absolute;
+    left: 10px;
+    top:10px;
+    z-index: 2;
     opacity: 0.8;
-    height:20%;
-    width:18%;
+    height:250px;
+    width:250px;
 }
 #callerVideoBox {
     position:relative;
     border: 1px solid gray;
 }
 #callerVideo {
-  height:720px;
-  width:1280px;
+    height:720px;
+    width:1280px;
 }
 .closeButton {
     position:absolute;
