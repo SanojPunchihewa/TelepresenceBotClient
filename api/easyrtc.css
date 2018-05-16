@@ -58,6 +58,7 @@
 }
 
 .easyrtc_closeButton {
+    visibility: hidden;
     z-index: 2;
     position: absolute;
     width: 40px;
@@ -71,4 +72,3 @@
 .easyrtc_closeButton:hover {
     opacity: 1;
 }
-

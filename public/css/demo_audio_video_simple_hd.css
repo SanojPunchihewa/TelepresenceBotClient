@@ -1,3 +1,14 @@
+.button {
+  float: left;
+  color: white;
+  font-weight: 700;
+  padding: 8px;
+  margin-top: 10px;
+  border: 0px;
+  border-radius: 4px;
+  width: 50%;
+}
+
 .callButton {
   background-color: #04C8E1;
   color: white;
@@ -39,6 +50,7 @@
     width:100%;
 }
 .closeButton {
+    visibility: hidden;
     position:absolute;
     background-color: transparent;
     background-image: url('../images/button_close.png');

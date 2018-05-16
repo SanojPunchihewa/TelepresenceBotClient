@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Telepresence | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style-reset.css">
+    <link rel="stylesheet" href="css/style-dashboard.css">
+
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="/easyrtc/easyrtc.js"></script>
+		<script type="text/javascript" src="js/dashboard.js"></script>
+
+</head>
+<body onload="checkAvailabiliy();">
+
+    <section id="sideMenu">
+        <nav>
+            <div class="align-top">
+                <h2>Telepresence Robot</h2>
+                <h3>Department of Computer Engineering</h3>
+                <h4>University of Peradeniya</h4>
+            </div>
+            <a href="dashBoard.html" class="active"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+            <a href="profile.html"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
+            <a href="#"><i class="fa fa-bell" aria-hidden="true"></i>Notifications</a>
+            <div class="align-bottom">
+                <a href="#"><i class="fa fa-sign-out"></i>Sign Out</a>
+            </div>
+        </nav>
+    </section>
+
+    <header>
+        <div class="search-area">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="text">
+        </div>
+        <div class="user-field">
+            <a href="#" class="notification"><i class="fa fa-bell-o" aria-hidden="true"></i><span class="circle">3</span></a>
+            <a href="profile.html" style="cursor: pointer">
+                <div class="user-image"></div>
+            </a>
+        </div>
+
+    </header>
+
+    <div class="content">
+
+        <h2>Dashboard</h2>
+        <h3>Welcome</h3>
+
+         <table cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th>Robot</th>
+                    <th>Status</th>
+                    <th>Battery</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>R1</td>
+                    <td>Busy</td>
+                    <td>50%</td>
+                    <td><button>Connect Now</button></td>
+                </tr>
+                 <tr>
+                    <td>R1</td>
+                    <td>Available</td>
+                    <td>70%</td>
+                    <td><button onclick="location.href='index.html'">Connect Now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

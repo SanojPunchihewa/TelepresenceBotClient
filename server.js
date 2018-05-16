@@ -41,8 +41,15 @@ easyrtc.events.on("easyrtcAuth", function(socket, easyrtcid, msg, socketCallback
 
 // To test, lets print the credential to the console for every room join!
 easyrtc.events.on("roomJoin", function(connectionObj, roomName, roomParameter, callback) {
-    console.log("["+connectionObj.getEasyrtcid()+"] Credential retrieved!", connectionObj.getFieldValueSync("credential"));
-    easyrtc.events.defaultListeners.roomJoin(connectionObj, roomName, roomParameter, callback);
+
+    connectionObj.getApp().getRoomOccupantCount(roomName, function (err, data) {
+        if(data < 2){
+          console.log("["+connectionObj.getEasyrtcid()+"] Credential retrieved!", connectionObj.getFieldValueSync("credential"));
+          easyrtc.events.defaultListeners.roomJoin(connectionObj, roomName, roomParameter, callback);
+        }else {
+          console.log("Room Full");
+        }
+    })
 });
 
 // Start EasyRTC server

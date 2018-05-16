@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Telepresence | SignUp</title>	
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">    
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">    
+    <link rel="stylesheet" href="css/style-reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/style-index.css"/>
+
+</head>
+<body>    
+    
+<style>
+    
+    .content-box {
+        display: flex;
+        margin: 30px;
+/*      box-shadow: 2px 4px 20px #888888;*/
+        height: auto;
+        background-color: white;
+    }
+    
+    .middle-panel {
+        font-family: 'Lato', sans-serif;
+        text-align: center;    
+        height: 100%;
+        margin: auto;
+        padding: 20px;
+        width: inherit;
+        text-align: left;
+    }
+    
+    .middle-panel h2 {
+        font-size: 1.5em;
+    }
+    
+    .middle-panel h3 {
+        margin-bottom: 5px;
+    }
+    
+    .middle-panel p {
+        padding: 5px;
+        margin-top: 10px;
+        font-size: 0.8rem;
+    }
+ 
+    .middle-panel .star-required{
+        color: red;
+        font-size: 1.3em;
+    }
+    
+    .middle-panel .input-text-area {
+        font-family: 'Lato', sans-serif;
+        color: #505050;
+        margin: 5px;
+        padding: 8px;
+        width: 545px;            
+    }
+    
+    .middle-panel .input-text-area:focus {
+        outline: none !important;
+        border:1px solid #04C8E1;  
+    }
+    
+    .middle-panel .account-type-group{
+        margin: 5px;     
+        display: flex; 
+        color: #505050;
+    }
+    
+    .middle-panel h4 {
+        color: #505050;
+        margin: 5px;     
+        padding: 10px;
+    }
+    
+    .middle-panel .account-type-group input[type="radio"]{
+        display: none;
+    }
+    .middle-panel .account-type-group input[type="radio"]:checked + label{
+        background: hsla(150, 75%, 50%, 1);
+        color: white;
+    }
+    .middle-panel .account-type-group label {       
+          display: block;
+          width: 250px;
+          border: 2px solid hsla(150, 75%, 50%, 1);
+          border-radius: 5px;    
+          padding: 5px;
+          text-align: center;
+          margin-right: 20px;
+    }
+    
+    .middle-panel .account-type-group label p {
+        padding: 1px;
+    }
+    
+    .middle-panel .text{
+        color: #505050;      
+    }
+    
+    @media (max-width: 699px){
+        .middle-panel {
+            text-align: center;
+        }
+        
+        .middle-panel .input-text-area {
+            width: 250px;
+        }
+        
+        .middle-panel .account-type-group{
+            display: block;
+            width: 250px;
+            margin: auto;
+        }
+    }
+    
+</style>    
+    <div class="content-box">      
+        <div class="middle-panel">
+            <h2>Registration</h2>
+            <div class="login-panel">                
+                <h3>Personal Information</h3>
+                <input class="input-fields" id="user-f-name" type="text" required placeholder="First Name"><span class="star-required">*</span>
+                <input class="input-fields" id="user-l-name" type="text" required placeholder="Last Name"><span class="star-required">*</span><br>
+                <input class="input-fields" id="user-phone-office" type="text" placeholder="Office Phone"><span class="star-required" style="opacity: 0;">*</span>
+                <input class="input-fields" id="user-phone-mobile" type="text" placeholder="Mobile Phone"><span class="star-required" style="opacity: 0;">*</span><br>
+                <textarea class="input-text-area" placeholder="Small Description about yourself..."></textarea><span class="star-required" style="opacity: 0;">*</span><br>
+                <h3 style="margin-top: 10px">Account</h3>
+                <input class="input-fields" id="user-display-name" type="text" required placeholder="Display Name"><span class="star-required">*</span><br>
+                <input class="input-fields" id="user-email" type="text" required placeholder="Email Address"><span class="star-required">*</span><br>
+                <input class="input-fields" id="user-password" type="password" required placeholder="Password"><span class="star-required">*</span>
+                <input class="input-fields" id="user-password-retype" type="password" required placeholder="Retype Password"><span class="star-required">*</span><br>
+                <h4>Choose account type</h4>
+                <div class="account-type-group">                    
+                    <input type="radio" id="id-account-type-user" name="select" value="account-user" checked>
+                    <label for="id-account-type-user">
+                    <h5>User</h5>
+                    <p>Give basic control and video streaming</p>
+                    </label><span class="star-required" style="opacity: 0;">*</span>
+                    <input type="radio" id="id-account-type-admin" name="select" value="account-admin">
+                    <label for="id-account-type-admin">
+                    <h5>Admin</h5>
+                    <p>Full control of the robot(Shutdown, lock...), Account aprroval</p>
+                    </label><span class="star-required" style="opacity: 0;">*</span>
+                </div>               
+                <p>Fields marked with <span class="star-required">*</span> are required</p>
+                <button id="login-button">SIGN UP</button>
+            </div>
+        </div>        
+    </div>
+</body>
+</html>
