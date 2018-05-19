@@ -30,7 +30,7 @@
         <script type="text/javascript" src="js/demo_audio_video_simple_hd.js"></script>
 
     </head>
-    <body  onload="">
+    <body onload="connect();">
         <!--hide-->
 
         <section id="sideMenu">
@@ -62,8 +62,10 @@
                 <br>
                 <div id="iam">Not yet connected...</div>
                 <div id="otherClients">
-                  <!-- <button id="btnStart" class="button callButton" style="" value="startCall">Start</button> -->
                 </div>
+                <button id="btnStart" class="callButton" style="" value="startCall">Start</button>
+                <textarea id="sendMessageText"></textarea>
+                <button id="btnSendMsg" class="callButton">Send</button>
               </div>
               <div class="robot-video-streaming">
                 <div id="videos">
@@ -75,6 +77,7 @@
               </div>
           </div>
         </div>
+
       </div>
     </body>
 </html>
