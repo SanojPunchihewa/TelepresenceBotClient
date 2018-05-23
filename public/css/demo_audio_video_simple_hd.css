@@ -1,14 +1,3 @@
-.button {
-  float: left;
-  color: white;
-  font-weight: 700;
-  padding: 8px;
-  margin-top: 10px;
-  border: 0px;
-  border-radius: 4px;
-  width: 50%;
-}
-
 .callButton {
   background-color: #04C8E1;
   color: white;
@@ -19,9 +8,35 @@
   border-radius: 4px;
   width: 50%;
 }
+.disabledButton{
+  background-color: #B3B6B7;
+  color: #626567;
+  font-weight: 700;
+  padding: 8px;
+  margin-top: 10px;
+  border: 0px;
+  border-radius: 4px;
+  width: 50%;
+}
 
 .callButton:hover{
   background-color: #0E9BAD;
+  transition: all 0.3s ease-in-out;
+}
+
+.endButton {
+  background-color: red;
+  color: white;
+  font-weight: 700;
+  padding: 8px;
+  margin-top: 10px;
+  border: 0px;
+  border-radius: 4px;
+  width: 50%;
+}
+
+.endButton:hover{
+  background-color: red;
   transition: all 0.3s ease-in-out;
 }
 
