@@ -12,17 +12,17 @@ var path = require('path');
 const route = require('./api/routes/todoRoutes');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/contactlist');
+// mongoose.connect('mongodb://localhost:27017/contactlist');
 
-mongoose.connection.on('connected', () => {
-    console.log('Connected to MongoDB');    
-})
+// mongoose.connection.on('connected', () => {
+//     console.log('Connected to MongoDB');    
+// })
 
-mongoose.connection.on('error', (err) => {
-    if(err){
-        console.log('Error in MongoDB ' + err);   
-    } 
-})
+// mongoose.connection.on('error', (err) => {
+//     if(err){
+//         console.log('Error in MongoDB ' + err);   
+//     } 
+// })
 
 // Set process name
 process.title = "node-easyrtc";
