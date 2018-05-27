@@ -7,6 +7,22 @@ var socketIo = require("socket.io");        // web socket external module
 var easyrtc = require('./lib/easyrtc_server');              // EasyRTC external module
 var cors = require('cors');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var path = require('path');
+const route = require('./api/routes/todoRoutes');
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/contactlist');
+
+mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB');    
+})
+
+mongoose.connection.on('error', (err) => {
+    if(err){
+        console.log('Error in MongoDB ' + err);   
+    } 
+})
 
 // Set process name
 process.title = "node-easyrtc";
@@ -17,14 +33,22 @@ var callwaiting = false;
 // Setup and configure Express http server. Expect a subfolder called "static" to be the web root.
 var app = express();
 app.use(cors())
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
-// app.use(serveStatic('static', {'index': ['index.html']}));
-app.use(serveStatic('public', {'index': ['index.html']}));
+
+//  Use routes defined in Route.js and prefix it with api
+app.use('/api', route);
+
+app.use(express.static(path.join(__dirname, '/public')));
 
 app.post('/robotData', (request, response) => {
    console.log(request.body);
    response.json({"callwaiting": callwaiting});
 });
+
+app.get('*', (req, res, next) => {
+    res.sendfile(__dirname + '/public/index.html')
+})
 
 var port = process.env.PORT || 8080;
 // Start Express http server on port 8080
@@ -82,5 +106,5 @@ var rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
 
 //listen on port 8080
 webServer.listen(port, function () {
-    console.log('listening on http://localhost:'+ port);
+    console.log('Server started at PORT:'+ port);
 });
