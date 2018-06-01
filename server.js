@@ -46,9 +46,9 @@ app.post('/robotData', (request, response) => {
    response.json({"callwaiting": callwaiting});
 });
 
-app.get('*', (req, res, next) => {
-    res.sendfile(__dirname + '/public/index.html')
-})
+// app.get('*', (req, res, next) => {
+//     res.sendfile(__dirname + '/public/index.html')
+// })
 
 var port = process.env.PORT || 8080;
 // Start Express http server on port 8080
