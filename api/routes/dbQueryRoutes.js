@@ -46,22 +46,23 @@ dbQueryRoutes.route('/deleteRobot/:id').get(function (req, res, next) {
 })
 
 // perform update on a Bot
-dbQueryRoutes.route('/updateRobot/:id').post(function (req, res, next) {
-  var name = req.params.id
+dbQueryRoutes.route('/updateRobot').post(function (req, res, next) {
+  var name = req.body.name;
   Robots.find({'robot_name':name}, function(error, bot){
     if (error) {
       return next(new Error('Bot not found'))
     } else {
       //bot.robot_name = req.body.name      
       //bot.battery_level = req.body.battery_level
-      bot.robot_status = req.body.status
-
-      bot.save({
-        function (error, bot) {
+      bot[0].robot_status = req.body.status;
+      console.log(bot[0]);
+      var bbbb = bot[0];
+      bbbb.save({        
+        function (error, bot) {         
           if (error) {
             res.status(400).send('Unable to update Bot')
           } else {
-            res.status(200).json(bot)
+            res.status(204).json(bot)
           }
         }
       })

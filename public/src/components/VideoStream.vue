@@ -90,14 +90,16 @@
             easyrtc.enableDebug(false);
             easyrtc.enableDataChannels(true);
             //easyrtc.setDataChannelOpenListener(openListener);
-            //easyrtc.setDataChannelCloseListener(closeListener);
-            easyrtc.setPeerListener(this.saddToConversation);
-            easyrtc.setPeerClosedListener(this.peerLost);
+            easyrtc.setDataChannelCloseListener(this.channelCloseListener);
+            easyrtc.setPeerListener(this.saddToConversation);            
             easyrtc.setRoomOccupantListener(this.convertListToButtons);
             easyrtc.easyApp("easyrtc.videoChatHd", this.$refs.selfVideo.id, [this.$refs.callerVideo.id], this.loginSuccess, this.loginFailure);
         },
-        peerLost(easyrtcid){
+        channelCloseListener(easyrtcid){
             console.log('Lost Connection to ' + easyrtcid);
+            clearInterval(this.setTime);
+            easyrtc.closeLocalMediaStream();
+            easyrtc.disconnect();
             var path = '/dashboard';
             this.$router.push(path);
         },

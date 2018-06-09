@@ -10,8 +10,8 @@
         <td>{{ props.item.robot_name }}</td>
         <td class="text-xs-center">{{ props.item.robot_status }}</td>
         <td class="text-xs-center">{{ props.item.battery_level }}</td>
-        <td class="text-xs-center">
-          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" @click="loadVideoStreaming(props.item._id)">Connect</v-btn>
+        <td class="text-xs-center">     <!--//props.item._id-->
+          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" @click="loadVideoStreaming('bot123')">Connect</v-btn>
           <v-btn v-else disabled>Busy</v-btn>
         </td>
         <td class="text-xs-center">
@@ -43,11 +43,33 @@
           { text: ' ', value: '', align: 'center'},
           { text: ' ', value: '', align: 'center'}
         ],
-        robots: []
+        //robots: []
+        robots: [
+          {
+            robot_name: 'Robot Floor-1',
+            robot_status: 'Available',
+            battery_level: '60%',
+          },
+          {
+            robot_name: 'Robot Floor-2',
+            robot_status: 'Busy',
+            battery_level: '80%'
+          },
+          {
+            robot_name: 'Robot Floor-3',
+            robot_status: 'Locked',
+            battery_level: '40%'
+          },
+          {
+            robot_name: 'Robot Floor-4',
+            robot_status: 'Charging',
+            battery_level: '5%'
+          }
+        ]
       }
     },
     created: function() { // get Robots and start listening to events once component is created
-      this.fetchRobots();
+      //this.fetchRobots();
       //this.listenToEvents();
     },
     methods: {
