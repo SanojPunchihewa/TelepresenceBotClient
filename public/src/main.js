@@ -12,6 +12,7 @@ import Dash from './components/Dash.vue'
 import DashBoardView from './components/Dashboard.vue'
 import ProfileView from './components/Profile.vue'
 import VideoStreamView from './components/VideoStream.vue'
+import NotificationsView from './components/Notifications'
 
 Vue.use(Vuetify, {
   theme: {
@@ -20,6 +21,7 @@ Vue.use(Vuetify, {
     accent: '#00E5FF' 
   }
 })
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -39,10 +41,17 @@ const routes = [
         meta: {description: 'Edit Your Profile Settings'}
       },
       {
-        path: 'video-stream',
+        path: 'video-stream/:botId',
         component: VideoStreamView,
         name: 'Video Streaming',
-        meta: {description: 'p2p video streaming with the robot'}
+        meta: {description: 'p2p video streaming with the robot',},
+        props: true
+      },
+      {
+        path: 'notifications',
+        component: NotificationsView,
+        name: 'Notifications',
+        meta: {description: 'All your messages are here'}
       }
     ]
   }

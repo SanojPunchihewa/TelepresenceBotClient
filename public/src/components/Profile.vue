@@ -49,9 +49,9 @@
                 <v-flex xs12>
                     <v-text-field box multi-line label="Bio"></v-text-field>
                 </v-flex>
-                <div class="text-sm-center">
+                <v-flex xs12 class="text-xs-center">
                     <v-btn round color="warning">Update Profile</v-btn>
-                </div>                
+                </v-flex>                
                 </v-layout>
               </v-container>
           </v-card-text>

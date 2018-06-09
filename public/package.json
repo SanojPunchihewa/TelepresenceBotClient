@@ -8,14 +8,16 @@
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
-  "dependencies": {
+  "dependencies": {    
     "vue": "^2.5.3",
-    "vuetify": "^1.0.0",
     "vue-date-picker": "^1.0.2",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.2.0",
+    "vuetify": "^1.0.0",
     "vuex": "^2.0.0",
-    "vuex-router-sync": "^4.1.2"
+    "vuex-router-sync": "^4.1.2",
+    "axios": "^0.16.2",
+    "vue-axios": "^2.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

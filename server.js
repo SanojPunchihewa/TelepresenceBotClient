@@ -1,28 +1,28 @@
 // Load required modules
-var http    = require("http");              // http server core module
+var http    = require("http");                  // http server core module
 var https = require('https');
-var express = require("express");           // web framework external module
-var serveStatic = require('serve-static');  // serve static files
-var socketIo = require("socket.io");        // web socket external module
-var easyrtc = require('./lib/easyrtc_server');              // EasyRTC external module
+var express = require("express");               // web framework external module
+var serveStatic = require('serve-static');      // serve static files
+var socketIo = require("socket.io");            // web socket external module
+var easyrtc = require('./lib/easyrtc_server');  // EasyRTC external module
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
-const route = require('./api/routes/todoRoutes');
+const route = require('./api/routes/dbQueryRoutes');
 
 // Connect to MongoDB
-// mongoose.connect('mongodb://localhost:27017/contactlist');
+mongoose.connect('mongodb://localhost:27017/telepresence');
 
-// mongoose.connection.on('connected', () => {
-//     console.log('Connected to MongoDB');    
-// })
+mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB');    
+})
 
-// mongoose.connection.on('error', (err) => {
-//     if(err){
-//         console.log('Error in MongoDB ' + err);   
-//     } 
-// })
+mongoose.connection.on('error', (err) => {
+    if(err){
+        console.log('Error in MongoDB ' + err);   
+    } 
+})
 
 // Set process name
 process.title = "node-easyrtc";
@@ -46,7 +46,9 @@ app.post('/robotData', (request, response) => {
    response.json({"callwaiting": callwaiting});
 });
 
-app.get('*', (req, res, next) => {
+var paths = ['/', '/dashboard', '/login', '/profile', '/video-stream', '/notifications'];
+
+app.get(paths, (req, res, next) => {
     res.sendfile(__dirname + '/public/index.html')
 })
 
