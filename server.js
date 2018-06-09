@@ -9,10 +9,14 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
+var axios = require('axios');
 const route = require('./api/routes/dbQueryRoutes');
+
+const serverPath = "http://localhost:8080/";
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/telepresence');
+//mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
 
 mongoose.connection.on('connected', () => {
     console.log('Connected to MongoDB');    
@@ -49,7 +53,7 @@ app.post('/robotData', (request, response) => {
 var paths = ['/', '/dashboard', '/login', '/profile', '/video-stream', '/notifications'];
 
 app.get(paths, (req, res, next) => {
-    res.sendfile(__dirname + '/public/index.html')
+    res.sendFile(__dirname + '/public/index.html')
 })
 
 var port = process.env.PORT || 8080;
@@ -78,8 +82,9 @@ easyrtc.events.on("easyrtcAuth", function(socket, easyrtcid, msg, socketCallback
 });
 
 //Overriding onDisconnect
-easyrtc.events.on("disconnect", function (connectionObj, callback) {
-  callwaiting = false;
+easyrtc.events.on("disconnect", function (connectionObj, callback) {    
+  callwaiting = false;  
+  updateBot(connectionObj.getUsername(), "Available");     
   easyrtc.events.defaultListeners.disconnect(connectionObj, callback);
 })
 
@@ -90,10 +95,21 @@ easyrtc.events.on("roomJoin", function(connectionObj, roomName, roomParameter, c
       if(data[roomName].numberClients < 2){
         console.log("["+connectionObj.getEasyrtcid()+"] Credential retrieved!", connectionObj.getFieldValueSync("credential"));
         callwaiting = true;
+        updateBot(connectionObj.getUsername(), "Busy");      
         easyrtc.events.defaultListeners.roomJoin(connectionObj, roomName, roomParameter, callback);
       }
     })    
 });
+
+// easyrtc.events.on('easyrtcMsg', function(connectionObj, msg, socketCallback, next){
+    
+//     if(msg.msgType == "robot_info"){
+//         var bot_name = msg.msgData.name;
+//         var id = msg.msgData.easyrtcid;
+//         console.log("---- INFO ---- " + bot_name);
+//     }
+//     easyrtc.events.defaultListeners.easyrtcMsg(connectionObj, msg, socketCallback, next);
+// })
 
 // Start EasyRTC server
 var rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
@@ -101,7 +117,6 @@ var rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
 
     rtcRef.events.on("roomCreate", function(appObj, creatorConnectionObj, roomName, roomOptions, callback) {
         console.log("roomCreate fired! Trying to create: " + roomName);
-
         appObj.events.defaultListeners.roomCreate(appObj, creatorConnectionObj, roomName, roomOptions, callback);
     });
 });
@@ -110,3 +125,15 @@ var rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
 webServer.listen(port, function () {
     console.log('Server started at PORT:'+ port);
 });
+
+function updateBot(id, status) {
+    let bot = {
+      "status": status
+    };
+    let uri = 'http://localhost:8080/api/update/' + id;  
+    axios.post(uri, bot).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.log(error);
+    })
+}

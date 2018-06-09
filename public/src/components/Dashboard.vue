@@ -11,7 +11,7 @@
         <td class="text-xs-center">{{ props.item.robot_status }}</td>
         <td class="text-xs-center">{{ props.item.battery_level }}</td>
         <td class="text-xs-center">
-          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" to='/video-stream/abcd1234'>Connect</v-btn>
+          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" @click="loadVideoStreaming(props.item._id)">Connect</v-btn>
           <v-btn v-else disabled>Busy</v-btn>
         </td>
         <td class="text-xs-center">
@@ -43,28 +43,7 @@
           { text: ' ', value: '', align: 'center'},
           { text: ' ', value: '', align: 'center'}
         ],
-        robots: [
-          // {
-          //   name: 'Robot Floor-1',
-          //   status: 'Available',
-          //   battery: '60%',
-          // },
-          // {
-          //   name: 'Robot Floor-2',
-          //   status: 'Busy',
-          //   battery: '80%'
-          // },
-          // {
-          //   name: 'Robot Floor-3',
-          //   status: 'Locked',
-          //   battery: '40%'
-          // },
-          // {
-          //   name: 'Robot Floor-4',
-          //   status: 'Charging',
-          //   battery: '5%'
-          // }
-        ]
+        robots: []
       }
     },
     created: function() { // get Robots and start listening to events once component is created
@@ -78,6 +57,10 @@
             this.robots = response.data;
             console.log(response.data);
         });
+      },
+      loadVideoStreaming(bot_id){
+        var path = '/video-stream/' + bot_id;
+        this.$router.push(path);
       }
       // updateTodo(todo) {
       //     let id = todo._id;

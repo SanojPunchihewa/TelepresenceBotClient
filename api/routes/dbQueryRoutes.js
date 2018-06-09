@@ -47,13 +47,13 @@ dbQueryRoutes.route('/deleteRobot/:id').get(function (req, res, next) {
 
 // perform update on a Bot
 dbQueryRoutes.route('/updateRobot/:id').post(function (req, res, next) {
-  var id = req.params.id
-  Robots.findById(id, function (error, bot) {
+  var name = req.params.id
+  Robots.find({'robot_name':name}, function(error, bot){
     if (error) {
       return next(new Error('Bot not found'))
     } else {
-      bot.robot_name = req.body.name      
-      bot.battery_level = req.body.battery_level
+      //bot.robot_name = req.body.name      
+      //bot.battery_level = req.body.battery_level
       bot.robot_status = req.body.status
 
       bot.save({
@@ -67,6 +67,25 @@ dbQueryRoutes.route('/updateRobot/:id').post(function (req, res, next) {
       })
     }
   })
+  // Robots.findById(id, function (error, bot) {
+  //   if (error) {
+  //     return next(new Error('Bot not found'))
+  //   } else {
+  //     //bot.robot_name = req.body.name      
+  //     //bot.battery_level = req.body.battery_level
+  //     bot.robot_status = req.body.status
+
+  //     bot.save({
+  //       function (error, bot) {
+  //         if (error) {
+  //           res.status(400).send('Unable to update Bot')
+  //         } else {
+  //           res.status(200).json(bot)
+  //         }
+  //       }
+  //     })
+  //   }
+  // })
 })
 
 module.exports = dbQueryRoutes

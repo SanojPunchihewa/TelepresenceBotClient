@@ -8,7 +8,7 @@
                 <div id='status' ref='status'>Connecting</div>
             </div>
             <div id="btnContainer">
-                <v-btn fab dark color="red">
+                <v-btn fab dark color="red" @click="endStreaming">
                     <v-icon dark>call_end</v-icon>
                 </v-btn>
                 <v-btn fab dark color="teal" @click.stop="isVideoEnabled = !isVideoEnabled" @click="toggleCamera">
@@ -80,19 +80,26 @@
       drawer: false,
       time: 0,
       isVideoEnabled: true,
-      isAudioEnabled: true
+      isAudioEnabled: true,
+      robotId: ""
     }),
     methods: {
         connect() {
             easyrtc.setUsername("sanoj95");
             easyrtc.setVideoDims();
             easyrtc.enableDebug(false);
-            //easyrtc.enableDataChannels(true);
+            easyrtc.enableDataChannels(true);
             //easyrtc.setDataChannelOpenListener(openListener);
             //easyrtc.setDataChannelCloseListener(closeListener);
-            //easyrtc.setPeerListener(addToConversation);
+            easyrtc.setPeerListener(this.saddToConversation);
+            easyrtc.setPeerClosedListener(this.peerLost);
             easyrtc.setRoomOccupantListener(this.convertListToButtons);
             easyrtc.easyApp("easyrtc.videoChatHd", this.$refs.selfVideo.id, [this.$refs.callerVideo.id], this.loginSuccess, this.loginFailure);
+        },
+        peerLost(easyrtcid){
+            console.log('Lost Connection to ' + easyrtcid);
+            var path = '/dashboard';
+            this.$router.push(path);
         },
         addToConversation(who, msgType, content) {
             // Escape html special characters, then add linefeeds.
@@ -108,6 +115,7 @@
             for(var easyrtcid in data) {
 
                 if(easyrtc.idToName(easyrtcid)){//== "robot-one"
+                this.robotId = easyrtcid;
                 console.log(easyrtc.idToName(easyrtcid));
 
                 // var button = document.getElementById('btnStart');
@@ -150,11 +158,27 @@
                 context.$refs.status.innerHTML = "Connected";
                 context.startTimer();
                 if (media === 'datachannel') {
-                console.log("Data Channel succesful");
+                    console.log("Data Channel succesful");
                 }
             };
             var failureCB = function() {};
             easyrtc.call(otherEasyrtcid, successCB, failureCB, acceptedCB);
+        },
+        sendStuffP2P(message) {
+            var otherEasyrtcid = this.robotId;
+            if (message.replace(/\s/g, "").length === 0) { // Don't send just whitespace
+                return;
+            }
+            if (easyrtc.getConnectStatus(otherEasyrtcid) === easyrtc.IS_CONNECTED) {
+                console.log(message);
+                easyrtc.sendDataP2P(otherEasyrtcid, 'msg', message);
+            }
+            else {
+                easyrtc.showError("NOT-CONNECTED", "not connected to " + easyrtc.idToName(otherEasyrtcid) + " yet.");
+            }
+
+            //addToConversation(selfEasyrtcid, "msgtype", message);
+            //document.getElementById('sendMessageText').value = "";
         },
         loginSuccess(easyrtcid) {
             //selfEasyrtcid = easyrtcid;
@@ -166,6 +190,13 @@
         toggleCamera(){            
             console.log('Cam:' + this.isVideoEnabled);
             easyrtc.enableVideo(this.isVideoEnabled);
+        },
+        endStreaming(){
+            console.log('Video-Stream End by User !');  
+            easyrtc.closeLocalMediaStream();
+            easyrtc.disconnect();
+            var path = '/dashboard';
+            this.$router.push(path);
         },
         toggleMic(){
             console.log('Mic:' + this.isVideoEnabled);
@@ -189,6 +220,7 @@
         },
         leftKeyPressed(){
             console.log('Left');
+            this.sendStuffP2P('Left');
         },
         rightKeyPressed(){
             console.log('Right');

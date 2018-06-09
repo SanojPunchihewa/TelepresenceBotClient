@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5b1aadbf1176631b312a9376"},"robot_name":"Floor-1-Robot","battery_level":"25","robot_status":"sleep","__v":0}
+{"_id":{"$oid":"5b1ab2171176631b312a9377"},"robot_name":"Floor-3-Robot","battery_level":"78","robot_status":"Busy","__v":0}
+{"_id":{"$oid":"5b1ab7221176631b312a9378"},"robot_name":"Ground-Floor-Robot","battery_level":"80","robot_status":"Available","__v":0}
