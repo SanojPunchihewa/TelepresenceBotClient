@@ -19,16 +19,25 @@ var user = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
-  diplay_name: {
+  password: {
     type: String,
     required: true
+  },
+  display_name: {
+    type: String,
+    required: true,
+    unique: true
   },
   account_type: {
     type: String,
     required: true
   },
+},
+{
+  collection: 'users'
 }
 )
 

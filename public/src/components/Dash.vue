@@ -101,20 +101,30 @@
 
 <script>
   export default {
-    data: () => ({     
+    data: () => ({
       dialog: false, 
       drawer: true,
-        items: [
-          { title: 'Dashboard', icon: 'dashboard', path: '/dashboard'},
-          { title: 'Profile', icon: 'person', path: '/profile' },
-          { title: 'Notifications', icon: 'notifications', path: '/notifications' }
-        ],
-        right: null
+      items: [
+        { title: 'Dashboard', icon: 'dashboard', path: '/dashboard'},
+        { title: 'Profile', icon: 'person', path: '/profile' },
+        { title: 'Notifications', icon: 'notifications', path: '/notifications' }
+      ],
+      right: null
     }),
     methods: {
       logout () {
         this.dialog = false
         this.$router.push('login') 
+      },
+      populateNavDrawer(){
+        items = [
+          { title: 'Dashboard', icon: 'dashboard', path: '/dashboard'},
+          { title: 'Profile', icon: 'person', path: '/profile' },
+          { title: 'Notifications', icon: 'notifications', path: '/notifications' }
+        ];
+        if(user == 'Admin'){
+          items.push({ title: 'Users', icon: 'people', path: '/users' })
+        }
       }
     },
     props: {

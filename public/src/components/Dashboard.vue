@@ -11,8 +11,8 @@
         <td class="text-xs-center">{{ props.item.robot_status }}</td>
         <td class="text-xs-center">{{ props.item.battery_level }}</td>
         <td class="text-xs-center">     <!--//props.item._id-->
-          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" @click="loadVideoStreaming('bot123')">Connect</v-btn>
-          <v-btn v-else disabled>Busy</v-btn>
+          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" @click="loadVideoStreaming('CE_GROUND_FLOOR')">Connect</v-btn>
+          <v-btn v-else disabled>Cannot Connect</v-btn>
         </td>
         <td class="text-xs-center">
           <v-tooltip bottom>

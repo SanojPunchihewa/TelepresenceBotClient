@@ -15,6 +15,9 @@ var robot = new mongoose.Schema({
     type: String,
     required: true
   }
+},
+{
+  collection: 'robots'
 }
 )
 

@@ -137,65 +137,25 @@
           {
             value: false,
             isUnread: true,
-            type: 'Eclair',
-            desc: 262,
-            date: '8.00am'
+            type: 'Bot Error',
+            desc: 'Bot two is locked by user1',
+            date: '4.00pm'
           },
           {
             value: false,
-            isUnread: false,
-            type: 'Cupcake',
-            desc: 305,
-            date: '24.05.2018'
-          },
-          {
-            value: false,
-            isUnread: false,
-            type: 'Gingerbread',
-            desc: 356,
-            date: '24.05.2018'
-          },
-          {
-            value: false,
-            isUnread: false,
-            type: 'Jelly bean',
-            desc: 375,
-            date: '24.05.2018'
-          },
-          {
-            value: false,
-            isUnread: false,
-            type: 'Lollipop',
-            desc: 392,
-            date: '24.05.2018'
-          },
-          {
-            value: false,
-            isUnread: false,
-            type: 'Honeycomb',
-            desc: 408,
-            date: '24.05.2018'
-          },
-          {
-            value: false,
-            isUnread: false,
-            type: 'Donut',
-            desc: 452,
-            date: '24.05.2018'
-          },
-          {
-            value: false,
-            isUnread: false,
-            type: 'KitKat',
-            desc: 518,
-            date: '24.05.2018'
+            isUnread: true,
+            type: 'New User Request',
+            desc: 'User Peter palker wants to connect',
+            date: '9.00pm'
           }
         ]
       },
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog_1 = true
+        if(item.type == "New User Request"){
+          this.editedIndex = this.desserts.indexOf(item)
+          this.editedItem = Object.assign({}, item)
+          this.dialog_1 = true
+        }
       },
       deleteItem (item) {
         const index = this.desserts.indexOf(item)
@@ -222,6 +182,6 @@
 
 <style>
   .unread {    
-    color: darkcyan;
+    /*color: darkcyan;*/
   }
 </style>

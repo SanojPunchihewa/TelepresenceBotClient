@@ -15,18 +15,18 @@ const route = require('./api/routes/dbQueryRoutes');
 const serverPath = "http://localhost:8080/";
 
 // Connect to MongoDB
-//mongoose.connect('mongodb://localhost:27017/telepresence');
-//mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
+mongoose.connect('mongodb://localhost:27017/telepresence');
+// mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
 
-// mongoose.connection.on('connected', () => {
-//     console.log('Connected to MongoDB');    
-// })
+mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB');    
+})
 
-// mongoose.connection.on('error', (err) => {
-//     if(err){
-//         console.log('Error in MongoDB ' + err);   
-//     } 
-// })
+mongoose.connection.on('error', (err) => {
+    if(err){
+        console.log('Error in MongoDB ' + err);   
+    } 
+})
 
 // Set process name
 process.title = "node-easyrtc";
@@ -50,7 +50,7 @@ app.post('/robotData', (request, response) => {
    response.json({"callwaiting": callwaiting});
 });
 
-var paths = ['/', '/dashboard', '/login', '/profile', '/video-stream', '/notifications'];
+var paths = ['/', '/dashboard', '/register', '/login', '/profile', '/video-stream', '/notifications'];
 
 app.get(paths, (req, res, next) => {
     res.sendFile(__dirname + '/public/index.html')
@@ -131,7 +131,7 @@ function updateBot(id, status) {
       "name":id,  
       "status": status
     };
-    let uri = 'http://localhost:8080/api/updateRobot';  
+    let uri = serverPath + 'api/updateRobot';  
     axios.post(uri, bot).then((response) => {
         console.log(response);
     }).catch((error) => {

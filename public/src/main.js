@@ -7,6 +7,7 @@ import 'vuetify/dist/vuetify.css'
 
 // Import Views - Top level
 import AppView from './components/App.vue'
+import Register from './components/Register.vue'
 import Login from './components/Login.vue'
 import Dash from './components/Dash.vue'
 import DashBoardView from './components/Dashboard.vue'
@@ -25,7 +26,9 @@ Vue.use(Vuetify, {
 Vue.use(VueRouter)
 
 const routes = [
+  {path: '/register', component: Register},
   {path: '/login', component: Login},
+  {path: '/', component: Login},
   {path: '/', component: Dash,
     children: [
       {

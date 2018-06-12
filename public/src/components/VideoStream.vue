@@ -93,7 +93,7 @@
             easyrtc.setDataChannelCloseListener(this.channelCloseListener);
             easyrtc.setPeerListener(this.saddToConversation);            
             easyrtc.setRoomOccupantListener(this.convertListToButtons);
-            easyrtc.easyApp("easyrtc.videoChatHd", this.$refs.selfVideo.id, [this.$refs.callerVideo.id], this.loginSuccess, this.loginFailure);
+            easyrtc.easyApp(this.chatRoomId, this.$refs.selfVideo.id, [this.$refs.callerVideo.id], this.loginSuccess, this.loginFailure);
         },
         channelCloseListener(easyrtcid){
             console.log('Lost Connection to ' + easyrtcid);
@@ -192,6 +192,7 @@
         toggleCamera(){            
             console.log('Cam:' + this.isVideoEnabled);
             easyrtc.enableVideo(this.isVideoEnabled);
+            this.sendStuffP2P('Cam:' + this.isVideoEnabled);
         },
         endStreaming(){
             console.log('Video-Stream End by User !');  
@@ -201,8 +202,9 @@
             this.$router.push(path);
         },
         toggleMic(){
-            console.log('Mic:' + this.isVideoEnabled);
+            console.log('Mic:' + this.isAudioEnabled);
             easyrtc.enableMicrophone(this.isAudioEnabled);
+            this.sendStuffP2P('Mic:' + this.isAudioEnabled);
         },
         setTime() {
             ++(this.time);
@@ -222,21 +224,24 @@
         },
         leftKeyPressed(){
             console.log('Left');
-            this.sendStuffP2P('Left');
+            //this.sendStuffP2P('Left');            
         },
         rightKeyPressed(){
             console.log('Right');
+            //this.sendStuffP2P('Left');           
         },
         upKeyPressed(){
             console.log('Up');
+            //this.sendStuffP2P('Left');           
         },
         downKeyPressed(){
             console.log('Down');
+            //this.sendStuffP2P('Left');            
         },
         moveSelection(evt) {
             switch (evt.keyCode) {
                 case 37:
-                this.leftKeyPressed();
+                this.leftKeyPressed();               
                 break;
                 case 39:
                 this.rightKeyPressed();
@@ -248,10 +253,14 @@
                 this.downKeyPressed();
                 break;
             }
+        },
+        sleep(delay) {
+            var start = new Date().getTime();
+            while (new Date().getTime() < start + delay);
         }
     },
     props: {
-        botId: {
+        chatRoomId: {
             type: String,
             default: 'My-Bot'
         }

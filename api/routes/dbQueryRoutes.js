@@ -1,11 +1,53 @@
 'use strict'
 
 var express = require('express')
+var bcrypt = require('bcryptjs');
 
 var dbQueryRoutes = express.Router()
 
 var Robots = require('../models/Robot')
 var Users = require('../models/User')
+
+dbQueryRoutes.route('/login').post(function(req, res){
+  Users.findOne({
+    email:req.body.email
+  }, function(error, user){
+      if(!user){        
+        res.send('No_User_Found')
+      }else{
+        if(bcrypt.compareSync(req.body.password, user.password)){
+          //req.session.user = user;
+          //res.locals.user = user;
+          res.send('Login_OK');
+        }else{
+          res.send('Password_Error');
+        }
+      }
+  })
+})
+
+dbQueryRoutes.route('/register').post(function (req, res) {
+  var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+  var user = new Users({
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    display_name: req.body.display_name,
+    email: req.body.email,
+    password: hash,
+    account_type: req.body.type
+  });
+  user.save(function(err){
+    if(err){
+      var error = 'Something went wrong : ' + err;
+      if(err.code === 11000){
+        error = 'Email_Exists';
+      }
+      res.send(error);
+    }else{
+      res.send('Reg_OK');
+    }
+  })
+})
 
 // get all robots in the db
 dbQueryRoutes.route('/allRobots').get(function (req, res, next) {
@@ -21,13 +63,13 @@ dbQueryRoutes.route('/allRobots').get(function (req, res, next) {
 dbQueryRoutes.route('/addRobot').post(function (req, res) {
   Robots.create(
     {
-      robot_name: req.body.name,      
+      robot_name: req.body.robot_name,      
       battery_level: req.body.battery_level,
-      robot_status: req.body.status
+      robot_status: req.body.robot_name
     },
     function (error, bot) {
       if (error) {
-        res.status(400).send('Unable to create bot list')
+        res.status(400).send('Unable to create bot list: err ' + error)
       }
       res.status(200).json(bot)
     }
