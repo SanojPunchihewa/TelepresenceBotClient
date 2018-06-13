@@ -11,6 +11,8 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bcryptjs": "^2.4.3",
+    "connect-mongo": "^2.0.1",
+    "express-session": "^1.15.6",
     "vue": "^2.5.3",
     "vue-axios": "^2.0.2",
     "vue-date-picker": "^1.0.2",

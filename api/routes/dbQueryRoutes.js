@@ -16,7 +16,7 @@ dbQueryRoutes.route('/login').post(function(req, res){
         res.send('No_User_Found')
       }else{
         if(bcrypt.compareSync(req.body.password, user.password)){
-          //req.session.user = user;
+          req.session.userId = user._id;
           //res.locals.user = user;
           res.send('Login_OK');
         }else{

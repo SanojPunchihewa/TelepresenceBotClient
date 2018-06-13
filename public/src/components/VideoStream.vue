@@ -81,7 +81,10 @@
       time: 0,
       isVideoEnabled: true,
       isAudioEnabled: true,
-      robotId: ""
+      robotId: "",
+      controlMsgTimer: 0,
+      forward: 0,
+      steering:0
     }),
     methods: {
         connect() {
@@ -93,11 +96,12 @@
             easyrtc.setDataChannelCloseListener(this.channelCloseListener);
             easyrtc.setPeerListener(this.saddToConversation);            
             easyrtc.setRoomOccupantListener(this.convertListToButtons);
-            easyrtc.easyApp(this.chatRoomId, this.$refs.selfVideo.id, [this.$refs.callerVideo.id], this.loginSuccess, this.loginFailure);
+            easyrtc.easyApp("easyrtc.videoChatHd", this.$refs.selfVideo.id, [this.$refs.callerVideo.id], this.loginSuccess, this.loginFailure);
         },
         channelCloseListener(easyrtcid){
             console.log('Lost Connection to ' + easyrtcid);
             clearInterval(this.setTime);
+            clearInterval(this.startSignaling);
             easyrtc.closeLocalMediaStream();
             easyrtc.disconnect();
             var path = '/dashboard';
@@ -158,6 +162,7 @@
             var successCB = function(caller, media) {
                 //context.$refs.status.toggle();
                 context.$refs.status.innerHTML = "Connected";
+                context.startSignaling();
                 context.startTimer();
                 if (media === 'datachannel') {
                     console.log("Data Channel succesful");
@@ -222,21 +227,50 @@
         startTimer() {
             this.interval = setInterval(this.setTime, 1000);
         },
-        leftKeyPressed(){
+        startSignaling(){
+            this.interval = setInterval(this.sendSignaling, 1000);
+        },
+        sendSignaling(){
+           
+            var message = 'drive,' + this.forward + ',' + this.steering;
+            this.sendStuffP2P(message);
+            console.log('Sending: ' + message);
+        },
+        leftKeyPressed(){                        
             console.log('Left');
-            //this.sendStuffP2P('Left');            
+            this.steering = -50;              
         },
         rightKeyPressed(){
             console.log('Right');
+            this.steering = 50;              
             //this.sendStuffP2P('Left');           
         },
         upKeyPressed(){
             console.log('Up');
-            //this.sendStuffP2P('Left');           
+            //this.sendStuffP2P('Left');      
+            this.forward = 70;                   
         },
         downKeyPressed(){
             console.log('Down');
-            //this.sendStuffP2P('Left');            
+            //this.sendStuffP2P('Left');       
+            this.forward = -70;         
+        },
+        moveSelection_R(evt) {
+            var content = this;
+            switch (evt.keyCode) {
+                case 37:
+                    content.steering = 0;           
+                break;
+                case 39:
+                    content.steering = 0;  
+                break;
+                case 38:
+                    content.forward = 0;  
+                break;
+                case 40:
+                    content.forward = 0;  
+                break;
+            }
         },
         moveSelection(evt) {
             switch (evt.keyCode) {
@@ -254,7 +288,7 @@
                 break;
             }
         },
-        sleep(delay) {
+        _sleep(delay) {
             var start = new Date().getTime();
             while (new Date().getTime() < start + delay);
         }
@@ -269,10 +303,12 @@
         console.log('Video-Stream created ! ' + this.botId);  
         this.connect();
         window.addEventListener('keydown', this.moveSelection);
+        //window.addEventListener('keyup', this.moveSelection_R);
     },
     beforeDestroy: function(){
         console.log('Video-Stream destroyed !');  
         easyrtc.closeLocalMediaStream();
+        clearInterval(this.sendSignaling);
         easyrtc.disconnect();
     }
   }

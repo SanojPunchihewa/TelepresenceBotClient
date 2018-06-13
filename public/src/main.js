@@ -25,6 +25,17 @@ Vue.use(Vuetify, {
 
 Vue.use(VueRouter)
 
+const guard = function(to, from, next) {
+  // check for valid auth token
+  axios.get('/api/checkAuthToken').then(response => {
+      // Token is valid, so continue
+      next();
+  }).catch(error => {
+      // There was an error so redirect
+      window.location.href = "/login";
+  })
+};
+
 const routes = [
   {path: '/register', component: Register},
   {path: '/login', component: Login},

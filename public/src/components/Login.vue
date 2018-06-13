@@ -57,22 +57,23 @@
     }),
     methods: {
       login(){
-        if (this.$refs.form.validate()) {
-          let uri = 'http://localhost:8080/api/login';
-          var user = {"email":this.email, "password":this.password};
-          axios.post(uri, user).then((response) => {   
-            console.log(response.data)
-            if(response.data == 'Login_OK'){
-              this.$router.push('/dashboard');
-            }else if(response.data == 'Password_Error'){
-              this.error_msg = "Incorrect Password"
-              this.alert = true;
-            }else if(response.data == 'No_User_Found'){
-              this.error_msg = "No account found, Check your email or Sign Up"
-              this.alert = true;
-            }
-          });
-        }
+        this.$router.push('/dashboard');
+        // if (this.$refs.form.validate()) {
+        //   let uri = 'http://localhost:8080/api/login';
+        //   var user = {"email":this.email, "password":this.password};
+        //   axios.post(uri, user).then((response) => {   
+        //     console.log(response.data)
+        //     if(response.data == 'Login_OK'){
+        //       this.$router.push('/dashboard');
+        //     }else if(response.data == 'Password_Error'){
+        //       this.error_msg = "Incorrect Password"
+        //       this.alert = true;
+        //     }else if(response.data == 'No_User_Found'){
+        //       this.error_msg = "No account found, Check your email or Sign Up"
+        //       this.alert = true;
+        //     }
+        //   });
+        // }
       }
     },
     props: {
