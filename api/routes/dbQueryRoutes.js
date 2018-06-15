@@ -2,6 +2,7 @@
 
 var express = require('express')
 var bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 var dbQueryRoutes = express.Router()
 
@@ -13,14 +14,19 @@ dbQueryRoutes.route('/login').post(function(req, res){
     email:req.body.email
   }, function(error, user){
       if(!user){        
-        res.send('No_User_Found')
+        res.status(200).json('No_User_Found');
+        //res.send('No_User_Found');
       }else{
         if(bcrypt.compareSync(req.body.password, user.password)){
-          req.session.userId = user._id;
+          var userId = user._id;
+          jwt.sign({userId}, 'secretkey', (err, token) => { //{ expiresIn: '30s' }
+            res.status(200).json({success:true, token:token});
+          });
           //res.locals.user = user;
-          res.send('Login_OK');
+          //res.send('Login_OK');
         }else{
-          res.send('Password_Error');
+          //res.send('Password_Error');        
+          res.status(200).json('Password_Error');
         }
       }
   })

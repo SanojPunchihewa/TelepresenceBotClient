@@ -75,7 +75,7 @@
               <span class="headline">Sign Out</span>
             </v-card-title>
             <v-card-text>
-              Are you sure ?
+              <v-span v-if="isLoggedIn">You curent logged In</v-span>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -114,6 +114,7 @@
     methods: {
       logout () {
         this.dialog = false
+        this.$store.dispatch('logout');
         this.$router.push('login') 
       },
       populateNavDrawer(){
@@ -125,6 +126,11 @@
         if(user == 'Admin'){
           items.push({ title: 'Users', icon: 'people', path: '/users' })
         }
+      }
+    },
+    computed: {
+      isLoggedIn() {
+        return this.$store.getters.isLoggedIn;
       }
     },
     props: {

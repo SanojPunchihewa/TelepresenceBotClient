@@ -57,13 +57,18 @@
     }),
     methods: {
       login(){
-        this.$router.push('/dashboard');
+        this.$store.dispatch("login",{
+          email:this.email,
+          password:this.password
+        }).then(res => {
+          this.$router.push('/dashboard');
+        })        
         // if (this.$refs.form.validate()) {
         //   let uri = 'http://localhost:8080/api/login';
         //   var user = {"email":this.email, "password":this.password};
         //   axios.post(uri, user).then((response) => {   
         //     console.log(response.data)
-        //     if(response.data == 'Login_OK'){
+        //     if(response.data.success){
         //       this.$router.push('/dashboard');
         //     }else if(response.data == 'Password_Error'){
         //       this.error_msg = "Incorrect Password"
@@ -73,7 +78,7 @@
         //       this.alert = true;
         //     }
         //   });
-        // }
+        //}
       }
     },
     props: {

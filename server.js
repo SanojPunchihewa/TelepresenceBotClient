@@ -11,25 +11,22 @@ var mongoose = require('mongoose');
 var path = require('path');
 var axios = require('axios');
 const route = require('./api/routes/dbQueryRoutes');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
 
 const serverPath = "http://localhost:8080/";
 
 // Connect to MongoDB
 //mongoose.connect('mongodb://localhost:27017/telepresence');
 // mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
-/*var db = mongoose.connection;
 
-mongoose.connection.on('connected', () => {
-    console.log('Connected to MongoDB');    
-})
+// mongoose.connection.on('connected', () => {
+//     console.log('Connected to MongoDB');    
+// })
 
-mongoose.connection.on('error', (err) => {
-    if(err){
-        console.log('Error in MongoDB ' + err);   
-    } 
-})*/
+// mongoose.connection.on('error', (err) => {
+//     if(err){
+//         console.log('Error in MongoDB ' + err);   
+//     } 
+// })
 
 // Set process name
 process.title = "node-easyrtc";
@@ -42,16 +39,6 @@ var app = express();
 app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
-
-//use sessions for tracking logins
-app.use(session({
-    secret: 'work hard',
-    resave: true,
-    saveUninitialized: false,
-    store: new MongoStore({
-      mongooseConnection: db
-    })
-}));
 
 //  Use routes defined in Route.js and prefix it with api
 app.use('/api', route);

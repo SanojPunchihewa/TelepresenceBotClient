@@ -5,6 +5,8 @@ import VueRouter from 'vue-router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.css'
 
+import { store } from './store/store';
+
 // Import Views - Top level
 import AppView from './components/App.vue'
 import Register from './components/Register.vue'
@@ -83,6 +85,7 @@ var router = new VueRouter({
 
 new Vue({
   el: '#root',
+  store,
   router: router,
   render: h => h(AppView)
 })

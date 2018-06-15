@@ -83,8 +83,8 @@
       isAudioEnabled: true,
       robotId: "",
       controlMsgTimer: 0,
-      forward: 0,
-      steering:0
+      forward: [60, 60, 60, 60, 30, 30],
+      steering:[0, 30, -30, 0, 30, -30]
     }),
     methods: {
         connect() {
@@ -100,8 +100,7 @@
         },
         channelCloseListener(easyrtcid){
             console.log('Lost Connection to ' + easyrtcid);
-            clearInterval(this.setTime);
-            clearInterval(this.startSignaling);
+            clearInterval(this.setTime);          
             easyrtc.closeLocalMediaStream();
             easyrtc.disconnect();
             var path = '/dashboard';
@@ -161,8 +160,7 @@
 
             var successCB = function(caller, media) {
                 //context.$refs.status.toggle();
-                context.$refs.status.innerHTML = "Connected";
-                context.startSignaling();
+                context.$refs.status.innerHTML = "Connected";              
                 context.startTimer();
                 if (media === 'datachannel') {
                     console.log("Data Channel succesful");
@@ -227,51 +225,18 @@
         startTimer() {
             this.interval = setInterval(this.setTime, 1000);
         },
-        startSignaling(){
-            this.interval = setInterval(this.sendSignaling, 1000);
-        },
-        sendSignaling(){
-           
-            var message = 'drive,' + this.forward + ',' + this.steering;
-            this.sendStuffP2P(message);
-            console.log('Sending: ' + message);
-        },
         leftKeyPressed(){                        
-            console.log('Left');
-            this.steering = -50;              
+            this.increament();            
         },
         rightKeyPressed(){
-            console.log('Right');
-            this.steering = 50;              
-            //this.sendStuffP2P('Left');           
+            console.log('Right');           
         },
         upKeyPressed(){
-            console.log('Up');
-            //this.sendStuffP2P('Left');      
-            this.forward = 70;                   
+            console.log('Up');               
         },
         downKeyPressed(){
-            console.log('Down');
-            //this.sendStuffP2P('Left');       
-            this.forward = -70;         
-        },
-        moveSelection_R(evt) {
-            var content = this;
-            switch (evt.keyCode) {
-                case 37:
-                    content.steering = 0;           
-                break;
-                case 39:
-                    content.steering = 0;  
-                break;
-                case 38:
-                    content.forward = 0;  
-                break;
-                case 40:
-                    content.forward = 0;  
-                break;
-            }
-        },
+            console.log('Down');                
+        },        
         moveSelection(evt) {
             switch (evt.keyCode) {
                 case 37:
@@ -287,10 +252,20 @@
                 this.downKeyPressed();
                 break;
             }
+        },       
+        doSomeThing(count){
+            var command = 'drive,' + this.forward[count] + ',' + this.steering[count];
+            this.sendStuffP2P(command);
+            console.log(command);
+            setTimeout(this.inreament, 1000);            
         },
-        _sleep(delay) {
-            var start = new Date().getTime();
-            while (new Date().getTime() < start + delay);
+        increament(){
+            if(this.controlMsgTimer < 6){
+                setTimeout(this.doSomeThing(this.controlMsgTimer), 1000);
+                this.controlMsgTimer++;
+            }else{
+                this.controlMsgTimer = 0;
+            }
         }
     },
     props: {
@@ -302,13 +277,12 @@
     mounted: function(){
         console.log('Video-Stream created ! ' + this.botId);  
         this.connect();
-        window.addEventListener('keydown', this.moveSelection);
-        //window.addEventListener('keyup', this.moveSelection_R);
+        window.addEventListener('keydown', this.moveSelection);        
     },
     beforeDestroy: function(){
         console.log('Video-Stream destroyed !');  
-        easyrtc.closeLocalMediaStream();
-        clearInterval(this.sendSignaling);
+        clearInterval(this.setTime);          
+        easyrtc.closeLocalMediaStream();    
         easyrtc.disconnect();
     }
   }
