@@ -23,7 +23,7 @@ export default {
         return last_used_time; 
     },
     fetchUser(token) {
-        let uri = 'http://localhost:8080/api/getUser';
+        let uri = 'https://tbot-web-rtc.herokuapp.com/api/getUser' //'http://localhost:8080/api/getUser';
         //var authHeader = 'Bearer ' + token;        
         return new Promise(function(resolve){
             axios({ method: 'post', url: uri, headers: { Authorization: token}}).then((response) => {
