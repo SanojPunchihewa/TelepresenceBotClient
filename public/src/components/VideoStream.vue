@@ -30,8 +30,7 @@
     }
     .robot-video-streaming {
         text-align: center;
-        max-height: 535px;        
-        background-color: blueviolet;
+        max-height: 535px;                
     }
     #statusContainer {
         position: relative;
@@ -70,13 +69,13 @@
     #callerVideo {
         height:100%;
         width:100%;
-        background: cadetblue;
+        background: rgb(167, 167, 167);
     }
 </style>
 
 <script>
   export default {
-    data: () => ({
+    data: () => ({      
       drawer: false,
       time: 0,
       isVideoEnabled: true,
@@ -100,9 +99,9 @@
         },
         channelCloseListener(easyrtcid){
             console.log('Lost Connection to ' + easyrtcid);
-            clearInterval(this.setTime);          
-            easyrtc.closeLocalMediaStream();
-            easyrtc.disconnect();
+            //clearInterval(this.setTime);          
+            //easyrtc.closeLocalMediaStream();
+            //easyrtc.disconnect();
             var path = '/dashboard';
             this.$router.push(path);
         },
@@ -199,8 +198,9 @@
         },
         endStreaming(){
             console.log('Video-Stream End by User !');  
-            easyrtc.closeLocalMediaStream();
-            easyrtc.disconnect();
+            //easyrtc.closeLocalMediaStream();
+            //easyrtc.disconnect();
+            //clearInterval(this.setTime);
             var path = '/dashboard';
             this.$router.push(path);
         },
@@ -222,11 +222,11 @@
                 return valString;
             }
         },
-        startTimer() {
+        startTimer() {            
             this.interval = setInterval(this.setTime, 1000);
         },
         leftKeyPressed(){                        
-            this.increament();            
+            //this.increament();            
         },
         rightKeyPressed(){
             console.log('Right');           
@@ -275,13 +275,13 @@
         }
     },
     mounted: function(){
-        console.log('Video-Stream created ! ' + this.botId);  
+        console.log('Video-Stream created ! ' + this.chatRoomId);  
         this.connect();
         window.addEventListener('keydown', this.moveSelection);        
     },
     beforeDestroy: function(){
-        console.log('Video-Stream destroyed !');  
-        clearInterval(this.setTime);          
+        console.log('Video-Stream destroyed !');        
+        easyrtc.hangupAll(); 
         easyrtc.closeLocalMediaStream();    
         easyrtc.disconnect();
     }

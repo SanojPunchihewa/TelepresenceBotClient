@@ -3,21 +3,28 @@ var mongoose = require('mongoose')
 // Define schema for Notification
 
 var notification = new mongoose.Schema({
+  user_id: {
+    type: String,
+    required: true
+  },
+  organization_id: {
+    type: String,
+    required: true
+  },
   notification_type: {
     type: String,
     required: true
   },
-  robot_name: {
+  notification: {
     type: String,
     required: true
   },
-  battery_level: {
-    type: String,
-    required: true
+  notification_meta: {
+    type: String
   },
-  robot_status: {
+  is_read: {
     type: String,
-    required: true
+    required:true
   }
 },
 {

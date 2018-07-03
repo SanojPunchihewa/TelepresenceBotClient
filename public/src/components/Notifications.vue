@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog_1" max-width="500px">      
+    <v-dialog v-model="dialog_noti_action" max-width="500px">      
       <v-card>
         <v-card-title>
           <span class="headline">Notifications</span>
@@ -17,25 +17,53 @@
                   </v-avatar>                
                 </v-flex>
                 <v-flex xs12 sm6 md6>
-                  <v-text-field v-model="editedItem.type" label="First Name" disabled></v-text-field>
-                  <v-text-field v-model="editedItem.type" label="Last Name" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.first_name" label="First Name" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.last_name" label="Last Name" disabled></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row wrap>                
                 <v-flex xs12 sm6 md6>
-                  <v-text-field v-model="editedItem.type" label="User Name" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.display_name" label="User Name" disabled></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md6>
-                  <v-text-field v-model="editedItem.type" label="Email Address" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.email" label="Email Address" disabled></v-text-field>
                 </v-flex>
               </v-layout>
+              <v-layout row wrap>                
+                <v-flex xs12 sm6 md6>
+                  <v-text-field v-model="editedItem.office_phone" label="Office Phone" disabled></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md6>
+                  <v-text-field v-model="editedItem.mobile_phone" label="Mobile Phone" disabled></v-text-field>
+                </v-flex>
+              </v-layout> 
+              <v-layout row wrap v-if="editedItem.account_status == 'approved'">
+                <v-flex xs12 sm6 md6>
+                  <v-text-field v-model="editedItem.account_type" label="Account Type" disabled></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md6>
+                  <v-text-field v-model="editedItem.account_status" label="Account Status" disabled></v-text-field>
+                </v-flex>
+              </v-layout> 
+              <v-form v-else ref="form" v-model="valid" lazy-validation>
+                <v-flex xs12>
+                <v-radio-group style="padding:0;margin:0" :rules="account_typeRules" label="Choose an account type" v-model="account_type" required row wrap>
+                  <v-radio label="User" value="user"></v-radio>
+                  <v-radio label="Admin" value="admin"></v-radio>
+                </v-radio-group>
+                </v-flex>         
+              </v-form>    
             </v-layout>
           </v-container>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions v-if="editedItem.account_status == 'pending'">
           <v-spacer></v-spacer>
-          <v-btn color="pink darken-1" flat @click.native="close">Reject</v-btn>
-          <v-btn color="teal darken-1" flat @click.native="save">Accept</v-btn>
+          <v-btn color="pink darken-1" flat @click.native="close">Cancel</v-btn>
+          <v-btn color="teal darken-1" flat @click.native="approve(editedItem._id)">Accept</v-btn>
+        </v-card-actions>
+        <v-card-actions v-else>
+          <v-spacer></v-spacer>
+          <v-btn color="teal darken-1" flat @click.native="dialog_noti_action = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -52,136 +80,216 @@
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="desserts"
-        :search="search"
-      >
+        :items="notifications"
+        :search="search">
         <template slot="items" slot-scope="props">
-          <td v-bind:class="{ unread: props.item.isUnread }" @click="editItem(props.item)">{{ props.item.type }}</td>
-          <td class="text-xs-right" @click="editItem(props.item)">{{ props.item.desc }}</td>
+          <tr v-bind:class="{ read: (props.item.is_read == 'true') }">
+          <td @click="editItem(props.item)">{{ props.item.notification }}</td>
+          <td class="text-xs-right" @click="editItem(props.item)">{{ props.item.notification_desc }}</td>
           <td class="text-xs-right" @click="editItem(props.item)">{{ props.item.date }}</td>
           <td class="justify-center layout px-0">
-            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+            <v-tooltip bottom>
+              <v-btn slot="activator" flat icon color="gray" @click="deleteItem(props.item)">
               <v-icon color="pink">delete</v-icon>
-            </v-btn>
+              </v-btn>        
+              <span>Delete</span>
+            </v-tooltip>  
+            <v-tooltip bottom>
+              <v-btn slot="activator" flat icon color="gray" @click="markAsRead(props.item)">
+              <v-icon v-if="props.item.is_read == 'true'" color="green">undo</v-icon>
+              <v-icon v-else color="green">done</v-icon>
+              </v-btn>        
+              <span v-if="props.item.is_read == 'true'">Mark As Unread</span>
+              <span v-else>Mark As Read</span>
+            </v-tooltip>  
           </td>
+          </tr>
         </template>
         <v-alert slot="no-results" :value="true" color="error" icon="warning">
           Your search for "{{ search }}" found no results.
         </v-alert>
       </v-data-table>
     </v-card>
+    <v-snackbar
+      v-model="snackbar"
+      bottom
+      :timeout="4000">
+      {{ snackbar_text }}
+      <v-btn
+        v-if="show_snackBar_btn"
+        color="pink"
+        flat
+        @click="snackbar = false">
+        Undo
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
+  import axios from 'axios';
+  import functions from './functions'
   export default {
     data () {
       return {
+        show_snackBar_btn:false,
+        snackbar: false,
+        snackbar_text: '',
+        user: {},
+        dialog_noti_action: false,
+        account_type: '',
+        account_typeRules: [
+          v => !!v || 'Account type is required'
+        ],
         search: '',
         headers: [
           {
             text: 'Notification',
             align: 'left',
             sortable: false,
-            value: 'type',
-            width: '25%'
+            value: 'notification',
+            width: '20%'
           },
-          { text: 'Description', value: 'desc' , align: 'center', width: '51%'},
-          { text: 'Date', value: 'date' , align: 'center', width: '12%'},
-          { text: 'Actions', value: '' , align: 'center' , width: '12%'}
+          { text: 'Description', sortable: false, value: 'notification_desc' , align: 'center', width: '47%'},
+          { text: 'Date', sortable: false, value: 'date' , align: 'center', width: '17%'},
+          { text: 'Actions', sortable: false, value: '' , align: 'center' , width: '16%'}
         ],
-        desserts: [],
+        notifications: [],       
         editedIndex: -1,
         editedItem: {
-          type: '',
-          desc: 0,
-          dates: 0
+          _id: '',
+          notification: '',
+          notification_meta: '',
+          full_date: '',
+          is_read: ''
         },
         defaultItem: {
-          type: '',
-          desc: 0,
-          dates: 0
-        }
+          _id: '',
+          notification: '',
+          notification_meta: '',
+          full_date: '',
+          is_read: ''
+        },
+        token : '',
       }
-    },
+    },    
     computed: {
+      getToken() {
+        return this.$store.getters.getToken;
+      },
       formTitle () {
         return 'User Request'
       }
     },
-    watch: {
-      dialog_1 (val) {
-        val || this.close()
-      }
-    },
     created () {
-      this.initialize()
+      this.token = 'Bearer ' + this.getToken;
+      functions.fetchUser(this.token).then((response) => {
+          this.user = response;
+          if(this.user.account_type == 'admin'){
+            this.fetchAdminNotifications()
+          }else{
+            this.fetchUserNotifications()
+          }
+      })
     },
     methods: {
-      initialize() {
-        this.desserts = [
-          {
-            value: false,
-            isUnread: true,
-            type: 'New User Request',
-            desc: 'User Bruce Wayne wants to connect',
-            date: '8.00pm'
-          },
-          {
-            value: false,
-            isUnread: true,
-            type: 'Bot Error',
-            desc: 'Bot one has shutdown',
-            date: '1.00pm'
-          },
-          {
-            value: false,
-            isUnread: true,
-            type: 'Bot Error',
-            desc: 'Bot two is locked by user1',
-            date: '4.00pm'
-          },
-          {
-            value: false,
-            isUnread: true,
-            type: 'New User Request',
-            desc: 'User Peter palker wants to connect',
-            date: '9.00pm'
-          }
-        ]
+      fetchUserById (id){
+        let uri = functions.getApiPath() + 'getUserById';             
+        axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'user_id' : id}}).then((response) => {
+            let new_user = response.data;
+            this.editedItem = Object.assign({}, new_user)
+            this.dialog_noti_action = true
+        })
+      },
+      addToArray(data) {
+        data.forEach(element => {
+          var time_stamp = new Date(parseInt( element._id.toString().substring(0,8), 16 ) * 1000 )
+          var full_date = this.$moment(time_stamp).format("dddd, MMMM Do YYYY, h:mm:ss a");
+          var last_used_time = functions.getTimeInfo(this, time_stamp)
+          var user = element.user_name;
+          this.notifications.push({
+            _id: element._id,
+            notification: element.notification_type,
+            notification_desc: element.notification,
+            notification_meta: element.notification_meta,
+            is_read: element.is_read,
+            date: last_used_time,
+            full_date: full_date
+          })
+        })
+      },
+      fetchAdminNotifications() {
+        let uri = functions.getApiPath() + 'getAdminNotification';       
+        axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'organization_id' : this.user.organization_id}}).then((response) => {
+            this.addToArray(response.data)          
+        })
+      },
+      fetchUserNotifications() {
+        let uri = functions.getApiPath() + 'getUserNotification'; 
+        axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'user_id' : this.user._id}}).then((response) => {          
+            this.addToArray(response.data)
+        })
+      },
+      markAsRead(item) {
+        let read;
+        if(item.is_read == 'true'){
+          read = 'false'
+          this.snackbar_text = 'Marked as Unread'
+        }else{
+          read = 'true'
+          this.snackbar_text = 'Marked as Read'
+        }       
+        let uri = functions.getApiPath() + 'updateNotification';       
+        axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'notification_id': item._id, 'is_read' : read}}).then((response) => {
+            console.log(response.data)
+            if(response.data == 'ERR'){
+              this.snackbar_text = 'Something Went Wrong'
+            }
+            this.snackbar = true
+        })
+      },
+      approve (id) {
+        if (this.$refs.form.validate()) {         
+          let uri = functions.getApiPath() + 'approveUser';             
+          axios({ method: 'post', url: uri, headers: { Authorization: this.token}, 
+                data: {'id' : id, 'account_status' :'approved', 'account_type' : this.account_type}
+          }).then((response) => {
+            this.dialog_edit = false
+            if(response.data == 'OK'){
+              this.snackbar_text = 'Account Approved'  
+              uri = functions.getApiPath() + 'updateNotification';       
+              axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'notification_id': item._id, 'is_read' : 'true'}})
+              this.fetchUsers();           
+            }else{
+              this.snackbar_text = 'Something went wrong !'   
+            }
+            this.snackbar = true                    
+          })
+        }
       },
       editItem (item) {
-        if(item.type == "New User Request"){
-          this.editedIndex = this.desserts.indexOf(item)
-          this.editedItem = Object.assign({}, item)
-          this.dialog_1 = true
+        if(item.notification == "New User Request"){
+          this.fetchUserById(item.notification_meta)          
         }
       },
       deleteItem (item) {
-        const index = this.desserts.indexOf(item)
+        const index = this.notifications.indexOf(item)
         confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
       },
       close () {
-        this.dialog_1 = false
+        this.dialog_noti_action = false       
         setTimeout(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         }, 300)
-      },
-      save () {
-        if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        } else {
-          this.desserts.push(this.editedItem)
-        }
-        this.close()
-      }
+      }      
     }
   }
 </script>
 
 <style>
-  .unread {    
-    /*color: darkcyan;*/
+  .read {
+    color: rgb(80, 80, 80);
+    background:#F2F4F4
   }
 </style>

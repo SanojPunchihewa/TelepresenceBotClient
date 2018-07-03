@@ -15,18 +15,18 @@ const route = require('./api/routes/dbQueryRoutes');
 const serverPath = "http://localhost:8080/";
 
 // Connect to MongoDB
-//mongoose.connect('mongodb://localhost:27017/telepresence');
-// mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
+//mongoose.connect('mongodb://localhost:27017/telepresenceRobot');
+mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
 
-// mongoose.connection.on('connected', () => {
-//     console.log('Connected to MongoDB');    
-// })
+mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB');    
+})
 
-// mongoose.connection.on('error', (err) => {
-//     if(err){
-//         console.log('Error in MongoDB ' + err);   
-//     } 
-// })
+mongoose.connection.on('error', (err) => {
+    if(err){
+        console.log('Error in MongoDB ' + err);   
+    } 
+})
 
 // Set process name
 process.title = "node-easyrtc";
@@ -46,13 +46,14 @@ app.use('/api', route);
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.post('/robotData', (request, response) => {
-   //console.log(request.body);
    response.json({"callwaiting": callwaiting});
 });
 
-var paths = ['/', '/dashboard', '/register', '/login', '/profile', '/video-stream', '/notifications'];
+var paths = ['/', '/dashboard', '/register', '/registerCompany', '/pendingApproval', 
+            '/login', '/profile', '/video-stream/', '/notifications', '/users',
+            '/organization', '/upload', '/forgotPassword'];
 
-app.get(paths, (req, res, next) => {
+app.get(paths, (req, res, next) => {    
     res.sendFile(__dirname + '/public/index.html')
 })
 
@@ -124,7 +125,7 @@ var rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
 //listen on port 8080
 webServer.listen(port, function () {
     console.log('Server started at PORT:'+ port);
-});
+});  
 
 function updateBot(id, status) {
     let bot = {

@@ -28,15 +28,14 @@ export const store = new Vuex.Store({
           state,
           commit,
           rootState
-        }, creds) {
-          console.log("login...", creds);
+        }, creds) {        
           commit(LOGIN); // show spinner
           return new Promise(resolve => {
             setTimeout(() => {
-              localStorage.setItem("userId_token", "JWT");
+              localStorage.setItem("userId_token", creds.token);
               commit(LOGIN_SUCCESS);
               resolve();
-            }, 1000);
+            }, 500);
           });
     
         },
@@ -47,7 +46,10 @@ export const store = new Vuex.Store({
     },
     getters: {
         isLoggedIn: state => {
-            return state.isLoggedIn;
+          return state.isLoggedIn;
+        },
+        getToken: () => {
+          return localStorage.getItem("userId_token")
         }
     }
 })

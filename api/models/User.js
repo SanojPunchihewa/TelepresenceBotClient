@@ -35,6 +35,14 @@ var user = new mongoose.Schema({
     type: String,
     required: true
   },
+  account_status: {
+    type: String,
+    required: true
+  },
+  organization_id: {
+    type: String,
+    required: true
+  }
 },
 {
   collection: 'users'

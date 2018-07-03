@@ -14,20 +14,25 @@
                   </v-flex>
                 </v-layout>
                 <v-form ref="form" lazy-validation>
-                  <v-text-field prepend-icon="person" :rules="emailRules" name="email" label="Email" type="text" v-model="email" required></v-text-field>
+                  <v-text-field prepend-icon="email" :rules="emailRules" name="email" label="Email" type="text" v-model="email" required></v-text-field>
                   <v-text-field id="password" :rules="passwordRules" prepend-icon="lock" name="password" label="Password" v-model="password" type="password" required></v-text-field>
+                  <v-flex md12 class="text-xs-right">                  
+                    <router-link  
+                    :class="$style.link"
+                    :to="'forgotPassword'">Forgot Password ?</router-link>
+                  </v-flex>
                   <v-alert :value="alert" type="error" transition="scale-transition">
                     {{error_msg}}
                   </v-alert>
                   <v-flex md12 class="text-xs-center">
-                    <v-btn color="indigo" dark @click="login">Login</v-btn>
+                    <v-btn style="width:50%" color="light-blue accent-2" dark @click="login">Login</v-btn>
                   </v-flex>       
                 </v-form>                         
-                <v-flex md12 class="text-xs-center">
-                  Don't have an account ?
-                </v-flex>
-                <v-flex md12 class="text-xs-center">
-                  <v-btn outline color="indigo" to="/register">Sign Up Now</v-btn>
+                <v-flex style="margin-top:5px" md12 class="text-xs-center">
+                  Don't have an account?
+                  <router-link  
+                  :class="$style.link"
+                  :to="'registerCompany'"> Sign up now</router-link>
                 </v-flex>
               </v-card-text>
             </v-card>
@@ -40,6 +45,7 @@
 
 <script>
   import axios from 'axios';
+  import functions from './functions'
   export default {    
     data: () => ({
       drawer: null,
@@ -56,29 +62,29 @@
       alert: false,     
     }),
     methods: {
-      login(){
-        this.$store.dispatch("login",{
-          email:this.email,
-          password:this.password
-        }).then(res => {
-          this.$router.push('/dashboard');
-        })        
-        // if (this.$refs.form.validate()) {
-        //   let uri = 'http://localhost:8080/api/login';
-        //   var user = {"email":this.email, "password":this.password};
-        //   axios.post(uri, user).then((response) => {   
-        //     console.log(response.data)
-        //     if(response.data.success){
-        //       this.$router.push('/dashboard');
-        //     }else if(response.data == 'Password_Error'){
-        //       this.error_msg = "Incorrect Password"
-        //       this.alert = true;
-        //     }else if(response.data == 'No_User_Found'){
-        //       this.error_msg = "No account found, Check your email or Sign Up"
-        //       this.alert = true;
-        //     }
-        //   });
-        //}
+      login(){    
+        if (this.$refs.form.validate()) {
+          let uri = functions.getApiPath() + 'login';
+          var user = {"email":this.email, "password":this.password};
+          axios.post(uri, user).then((response) => {           
+            if(response.data.success){
+              this.$store.dispatch("login", {
+                token: response.data.token
+              }).then(res => {
+                this.$router.push('/dashboard');
+              })              
+            }else if(response.data == 'Password_Error'){
+              this.error_msg = "Incorrect Password"
+              this.alert = true;
+            }else if(response.data == 'No_User_Found'){
+              this.error_msg = "No account found, Check your email or Sign Up"
+              this.alert = true;
+            }else if(response.data == 'Not_Approved'){
+              this.error_msg = "Sorry, your account is not approved yet !"
+              this.alert = true;
+            }
+          });
+        }
       }
     },
     props: {
@@ -86,3 +92,10 @@
     }
   }
 </script>
+
+<style module>
+  .link {
+    text-decoration: none;
+    color: rgb(0, 132, 255);
+  }
+</style>
