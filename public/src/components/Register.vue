@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-content>
+    <v-content v-if="this.link_ok">
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
           <v-flex xs12 sm10 md8>
@@ -102,6 +102,7 @@
   import functions from './functions'
   export default {
     data: () => ({
+      link_ok: false,
       organization_id: '',
       e1: true,
       valid: true,
@@ -185,15 +186,14 @@
         return (this.firstname + " " + this.lastname)
       }
     },
-    created() {            
+    beforeMount() {
       if(this.$router.app._route.query.organizationId){
-        this.organization_id = this.$router.app._route.query.organizationId;
-        console.log(this.organization_id);
+        this.organization_id = this.$router.app._route.query.organizationId;  
+        this.link_ok = true      
       }else{
-        console.log('Oops ! 404');
+        window.location.href = "/notfound";
       }
-
-    },
+    },  
     props: {
       source: String
     }

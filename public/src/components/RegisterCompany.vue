@@ -93,9 +93,9 @@
                         <v-form ref="form2" v-model="valid2" lazy-validation align-center justify-center>
                             <v-layout row wrap align-center justify-center>
                             <v-flex md5 sm5 xs12>
-                            <v-text-field prepend-icon="person" :rules="organizationNameRules" label="Organization Name" type="text" v-model="organizationName" required></v-text-field>
-                            <!-- <v-text-field prepend-icon="person" :rules="robotIdRules" label="Robot Id" type="text" v-model="robotId" required></v-text-field>
-                            <v-text-field prepend-icon="person" :rules="robotNameRules" label="Robot Name" type="text" v-model="robotName" required></v-text-field> -->
+                            <v-text-field prepend-icon="people" :rules="organizationNameRules" label="Organization Name" type="text" v-model="organizationName" required></v-text-field>
+                            <!-- <v-text-field prepend-icon="person" :rules="robotIdRules" label="Bot Id (Check the User Manual)" type="text" v-model="bot_id" required></v-text-field>
+                            <v-text-field prepend-icon="person" :rules="robotNameRules" label="Bot Name (Name given while setting up the Bot)" type="text" v-model="bot_name" required></v-text-field> -->
                             <v-alert :value="alert" type="error" transition="scale-transition">
                                 {{error_msg}}
                             </v-alert>     
@@ -105,6 +105,7 @@
                         <small>*indicates required field</small>                                                            
                     </v-card>
                     <v-btn color="primary" @click.native="submitOrganizationAccount">Continue</v-btn>
+                    <v-btn color="error" @click.native="cancelAccount">Cancel Registration</v-btn>
                 </v-stepper-content>               
                 </v-stepper-items>
             </v-stepper>
@@ -155,17 +156,20 @@
       organizationNameRules: [
         v => !!v || 'Orgaization Name is required'
       ],
-      robotId: '',
+      bot_id: '',
       robotIdRules: [
-        v => !!v || 'Robot Id is required'
+        v => !!v || 'Bot Id is required'
       ],
-      robotName: '',
+      bot_name: '',
       robotNameRules: [
-        v => !!v || 'Robot Name is required'
+        v => !!v || 'Bot Name is required'
       ],
     }),
 
     methods: {
+      cancelAccount() {
+
+      },
       submitOrganizationAccount () {
         if(this.$refs.form2.validate()) {
           let uri = functions.getApiPath() + 'addOrganization'
@@ -173,18 +177,75 @@
             organization_name: this.organizationName,
             organization_owner_id: this.userId
           }).then((response) => {
-            console.log(response)
-            var organization_id = response.data._id;
-            uri = functions.getApiPath() + 'updateUserOrganization'
-            axios.post(uri, {
-              id: this.userId,
-              organization_id: organization_id
-            }).then((response) => {
-              this.dialog = true;
-            })
+            if(response.data.Status == 'OK'){
+              var organization_id = response.data.organization_id;
+              uri = functions.getApiPath() + 'updateUserOrganization'
+              axios.post(uri, {
+                id: this.userId,
+                organization_id: organization_id
+              }).then((response) => {
+                this.dialog = true;
+              })
+            }else{
+
+            }            
           })
         }
       },
+      // submitOrganizationAccount () {
+      //   if(this.$refs.form2.validate()) { //checkRobot
+      //     let uri = functions.getApiPath() + 'checkRobot'
+      //     axios.post(uri, {
+      //       id: this.bot_id
+      //     }).then((response) => {
+      //       if(response == 'OK'){              
+      //         uri = functions.getApiPath() + 'addOrganization'
+      //         axios.post(uri, {
+      //           organization_name: this.organizationName,
+      //           organization_owner_id: this.userId
+      //         }).then((response) => {
+      //           if(response.Status == 'OK'){
+      //             console.log(response)
+      //             var organization_id = response.organization_id;
+      //             uri = functions.getApiPath() + 'updateUserOrganization'
+      //             axios.post(uri, {
+      //               id: this.userId,
+      //               organization_id: organization_id
+      //             }).then((response) => {
+      //               this.addNewRobot(organization_id);                    
+      //             })
+      //           }else{
+                  
+      //           }           
+      //         })
+      //       }else{
+      //         this.error_msg = "Unidentified Bot, Please check the bot Id"
+      //         this.alert = true
+      //       }
+      //     })
+      //   }
+      // },
+      // addNewRobot(organization_id) {        
+      //     let uri = functions.getApiPath() + 'updateRobotInfo';          
+      //     var data = {
+      //       id: this.bot_id,
+      //       organization_id : organization_id,
+      //       robot_name: this.bot_name,
+      //       robot_status: 'Available'
+      //     }          
+      //     axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: data}).then((response) => {
+      //         console.log(response)
+      //         if(response.data == 'Name Mismatch'){
+      //           this.error_msg = "Bot Name doesn\'t match with one given when setting up the bot"
+      //           this.alert = true
+      //         }else if(response.data == 'OK'){
+      //           this.dialog = true;
+      //         }else{
+      //           this.error_msg = "Something went wrong"
+      //           this.alert = true
+      //         }
+      //     })
+      // },
       submitPersonalAccount () {
         if (this.$refs.form1.validate()) {
           let uri = functions.getApiPath() + 'register'
@@ -201,6 +262,8 @@
             organization_id: '0000'
           }).then((response) => {   
             if(response.data.Status == 'Reg_OK'){
+              this.alert = false;
+              this.error_msg = ''
               this.step_pos = 2;
               this.userId = response.data.userId;              
             }else if(response.data == 'User_Name_Exists'){

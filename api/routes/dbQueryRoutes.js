@@ -57,7 +57,6 @@ dbQueryRoutes.route('/register').post(function (req, res) {
   user.save(function(err, user){
     if(err){     
       var error;
-      console.log(err);
       if(err.code === 11000){
         var field = err.message.split('index: ')[1];
         // now we have `email_1 dup key`
@@ -268,6 +267,18 @@ dbQueryRoutes.route('/updateRobotLastUsed').post(function (req, res) {
   )
 })
 
+// check a Bot
+dbQueryRoutes.route('/checkRobot').post(function (req, res, next) {
+  var id = req.body.id;
+  Robots.findById(id, function (error, bot) {
+    if (!bot) {
+      res.send('Not Found')    
+    } else {
+      res.send('OK')      
+    }
+  })
+})
+
 // perform Info update on a Bot
 dbQueryRoutes.route('/updateRobotInfo').post(function (req, res, next) {
   var id = req.body.id;
@@ -309,7 +320,8 @@ dbQueryRoutes.route('/addOrganization').post(function (req, res) {
       if (error) {
         res.send('Unable to create Organization: err ' + error)
       }
-      res.json(organization)
+      let reply = {'Status' : 'OK', 'organization_id' : organization._id}
+      res.json(reply)
     }
   )
 })
@@ -337,6 +349,17 @@ dbQueryRoutes.route('/allOrganizations').post(function (req, res, next) {
       return next(new Error(err))
     }
     res.json(organizations) // return all
+  })
+})
+
+// delete a organization
+dbQueryRoutes.route('/deleteOrganization').post(function (req, res, next) {
+  var id = req.body.organization_id
+  Organizations.findByIdAndRemove(id, function (err, user) {
+    if (err) {
+      return next(new Error('Organization not found'))
+    }
+    res.json('Successfully removed')
   })
 })
 

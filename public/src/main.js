@@ -25,6 +25,7 @@ import UsersView from './components/Users'
 import OrganizationView from './components/Organization'
 import Upload from './components/Upload'
 import ForgotPassword from './components/ForgotPassword'
+import PageNotFound from './components/PageNotFound'
 
 Vue.use(Vuetify, {
   theme: {
@@ -40,7 +41,7 @@ Vue.use(VueRouter)
 
 const requireAuth = function(to, from, next) {
   // check for valid auth token
-  if(store.getters.isLoggedIn){
+  if(store.getters.isLoggedIn){    
     next();
   }else{
     window.location.href = "/login";
@@ -48,13 +49,13 @@ const requireAuth = function(to, from, next) {
 };
 
 const routes = [
-  {path: '/register', component: Register, props: true},
+  {path: '/register', component: Register, props: true, name: 'Regsiter'},
   {path: '/upload', component:Upload},
-  {path: '/forgotPassword', component:ForgotPassword},
-  {path: '/pendingApproval', component: PendingApproval, props: true},
-  {path: '/registerCompany', component: RegisterCompany},
-  {path: '/login', component: Login},
-  {path: '/', component: Login},
+  {path: '/forgotPassword', component:ForgotPassword, name: 'Forgot Password'},
+  {path: '/pendingApproval', component: PendingApproval, props: true, name: 'Pending Approval'},
+  {path: '/registerCompany', component: RegisterCompany, name: 'Regsiter Company'},
+  {path: '/login', component: Login, name: 'Login'},
+  {path: '/', component: Login, name: 'Login'},
   {path: '/', component: Dash,
     children: [
       {
@@ -109,7 +110,8 @@ const routes = [
         beforeEnter: requireAuth
       }
     ]
-  }
+  },
+  {path: '/notfound', component: PageNotFound}
 ];
 
 // Routing logic

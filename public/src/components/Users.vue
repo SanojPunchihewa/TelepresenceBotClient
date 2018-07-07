@@ -246,7 +246,7 @@
     },    
     computed: {
       invitation_link () {        
-        return 'https://tbot-web-rtc.herokuapp.com/register/' + this.organization_id;
+        return 'https://tbot-web-rtc.herokuapp.com/register?organizationId=' + this.organization_id;
       },
       getToken() {
         return this.$store.getters.getToken;
@@ -354,6 +354,7 @@
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);       
+        this.snackbar_color = 'success'
         this.snackbar_text = 'Link Copied'
         this.snackbar = true
         this.dialog_invite = false

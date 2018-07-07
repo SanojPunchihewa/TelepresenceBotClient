@@ -95,7 +95,6 @@
         organization_id: '',
         admin: false,
         user: {},
-        invitation_link: 'https://telepresence.com/register/companyABC',
         dialog_add_bot: false, 
         headers: [
           {

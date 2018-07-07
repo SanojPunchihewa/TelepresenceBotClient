@@ -156,6 +156,9 @@
           this.items.push({ title: 'Users', icon: 'people', path: '/users' })
           this.items.push({ title: 'Organization', icon: 'group_work', path: '/organization' })
         }
+      },
+      destroy() {
+        //this.$store.dispatch('logout');
       }
     },
     
@@ -168,6 +171,7 @@
         this.populateNavDrawer();
         this.fetchOrganization();
       });
+      window.addEventListener('beforeunload', this.destroy)
     },
 
     beforeDestroy: function(){
