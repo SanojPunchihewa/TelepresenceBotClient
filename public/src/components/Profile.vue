@@ -51,13 +51,12 @@
                     :rules="emailRules"
                     v-model="email"
                     box
-                    label="Email address"
-                    hint="Enter your email!"
+                    label="Email Address"
                     persistent-hint
                     ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6>
-                    <v-text-field v-model="username" box label="User Name"></v-text-field>
+                    <v-text-field v-model="username" box label="Username"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6>
                     <v-text-field v-model="officenumber" box label="Office Phone"></v-text-field>

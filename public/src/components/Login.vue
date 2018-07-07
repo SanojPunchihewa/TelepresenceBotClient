@@ -19,11 +19,13 @@
                   <v-flex md12 class="text-xs-right">                  
                     <router-link  
                     :class="$style.link"
-                    :to="'forgotPassword'">Forgot Password ?</router-link>
+                    :to="'forgotPassword'">Forgot your password?</router-link>
                   </v-flex>
                   <v-alert :value="alert" type="error" transition="scale-transition">
                     {{error_msg}}
                   </v-alert>
+                  <v-flex md12 class="text-xs-center">
+                  </v-flex>
                   <v-flex md12 class="text-xs-center">
                     <v-btn style="width:50%" color="light-blue accent-2" dark @click="login">Login</v-btn>
                   </v-flex>       
@@ -77,10 +79,10 @@
               this.error_msg = "Incorrect Password"
               this.alert = true;
             }else if(response.data == 'No_User_Found'){
-              this.error_msg = "No account found, Check your email or Sign Up"
+              this.error_msg = "No account found. Check your email or Sign Up"
               this.alert = true;
             }else if(response.data == 'Not_Approved'){
-              this.error_msg = "Sorry, your account is not approved yet !"
+              this.error_msg = "Sorry, your account is not approved yet!"
               this.alert = true;
             }
           });

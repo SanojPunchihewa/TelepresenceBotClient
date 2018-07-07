@@ -83,7 +83,7 @@
               <span class="headline">Sign Out</span>
             </v-card-title>
             <v-card-text>
-              <v-span v-if="isLoggedIn">Are you sure ?</v-span>
+              <v-span v-if="isLoggedIn">Are you sure?</v-span>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>

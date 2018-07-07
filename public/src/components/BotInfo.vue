@@ -4,14 +4,14 @@
         <v-flex xs12 sm6 md6>
           <v-card>
             <v-card-text>
-              <span style="font-weight:300" class="title">Bot Name : {{ robot.robot_name }}</span>
+              <span style="font-weight:300" class="title">Bot Name: {{ robot.robot_name }}</span>
             </v-card-text>
           </v-card>
         </v-flex>
         <v-flex xs12 sm6 md6>
           <v-card>
             <v-card-text>
-              <span style="font-weight:300" class="title">Bot Id : {{ botId }}</span>
+              <span style="font-weight:300" class="title">Bot Id: {{ botId }}</span>
             </v-card-text>
           </v-card>
         </v-flex>

@@ -74,7 +74,7 @@
                     <v-alert :value="alert" type="error" transition="scale-transition">
                     {{error_msg}}
                     </v-alert> 
-                   <small>*indicates required field</small>
+                   <small>*Indicates required fields</small>
                    <v-card-text>
                     <v-flex xs10 offset-xs1>
                       <v-btn block color="success" @click="submit">Register</v-btn>
@@ -190,7 +190,7 @@
         this.organization_id = this.$router.app._route.query.organizationId;
         console.log(this.organization_id);
       }else{
-        console.log('Oops ! 404');
+        console.log('Oops! 404');
       }
 
     },

@@ -23,7 +23,7 @@
               </v-layout>
               <v-layout row wrap>                
                 <v-flex xs12 sm6 md6>
-                  <v-text-field v-model="editedItem.display_name" label="User Name" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.display_name" label="Username" disabled></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md6>
                   <v-text-field v-model="editedItem.email" label="Email Address" disabled></v-text-field>
@@ -37,7 +37,7 @@
                   <v-text-field v-model="editedItem.mobile_phone" label="Mobile Phone" disabled></v-text-field>
                 </v-flex>
               </v-layout> 
-              <v-layout row wrap v-if="editedItem.account_status == 'approved'">
+              <v-layout row wrap v-if="editedItem.account_status == 'Approved'">
                 <v-flex xs12 sm6 md6>
                   <v-text-field v-model="editedItem.account_type" label="Account Type" disabled></v-text-field>
                 </v-flex>
@@ -234,16 +234,16 @@
         let read;
         if(item.is_read == 'true'){
           read = 'false'
-          this.snackbar_text = 'Marked as Unread'
+          this.snackbar_text = 'Marked as unread'
         }else{
           read = 'true'
-          this.snackbar_text = 'Marked as Read'
+          this.snackbar_text = 'Marked as read'
         }       
         let uri = functions.getApiPath() + 'updateNotification';       
         axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'notification_id': item._id, 'is_read' : read}}).then((response) => {
             console.log(response.data)
             if(response.data == 'ERR'){
-              this.snackbar_text = 'Something Went Wrong'
+              this.snackbar_text = 'Something went wrong'
             }
             this.snackbar = true
         })
@@ -252,16 +252,29 @@
         if (this.$refs.form.validate()) {         
           let uri = functions.getApiPath() + 'approveUser';             
           axios({ method: 'post', url: uri, headers: { Authorization: this.token}, 
-                data: {'id' : id, 'account_status' :'approved', 'account_type' : this.account_type}
+                data: {'id' : id, 'account_status' :'Approved', 'account_type' : this.account_type}
           }).then((response) => {
             this.dialog_edit = false
             if(response.data == 'OK'){
               this.snackbar_text = 'Account Approved'  
               uri = functions.getApiPath() + 'updateNotification';       
               axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'notification_id': item._id, 'is_read' : 'true'}})
-              this.fetchUsers();           
+              this.fetchUsers();         
+              // Sent an email notification
+              let uri = functions.getApiPath() + 'sendEmail'; 
+              axios({ method: 'post', url: uri, data: {
+                'email' : this.editedItem.email, 
+                'subject' : 'Account Approved', 
+                'text': 'Hello,\n\n' +'Please note that your account has been successfully approved!'}
+              }).then((response) => {  
+                if(response.data == 'OK'){  
+                  this.snackbar_color = 'success'
+                  this.snackbar_text = 'Email notification sent'
+                  this.snackbar = true
+                }
+              });   
             }else{
-              this.snackbar_text = 'Something went wrong !'   
+              this.snackbar_text = 'Something went wrong!'   
             }
             this.snackbar = true                    
           })

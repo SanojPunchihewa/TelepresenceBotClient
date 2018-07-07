@@ -23,7 +23,7 @@
               </v-layout>
               <v-layout row wrap>                
                 <v-flex xs12 sm6 md6>
-                  <v-text-field v-model="editedItem.display_name" label="User Name" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.display_name" label="Username" disabled></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md6>
                   <v-text-field v-model="editedItem.email" label="Email Address" disabled></v-text-field>
@@ -60,12 +60,13 @@
           <span class="headline">Invite Users</span>
         </v-card-title>
         <v-card-text>
+          <v-form ref="form" lazy-validation>
           <v-flex>
-            <v-text-field id="email" name="email" label="Email Address" required></v-text-field>
-            <small>*indicates required field</small>
+            <v-text-field name="email" label="Email Address" type="text" v-model="email" required></v-text-field>
+            <small>*Indicates a required field</small>
           </v-flex>
           <v-flex class="text-xs-center">
-            <v-btn color="blue" outline @click.native="sendEmailInvitation">Send Invitation</v-btn>
+            <v-btn color="blue" outline @click="sendEmailInvitation">Send Invitation</v-btn>
           </v-flex>    
           <v-divider style="margin-top:15px">
           </v-divider>
@@ -81,7 +82,8 @@
                 <span>Copy Link</span>
               </v-tooltip>
             </v-flex>
-          </v-layout>             
+          </v-layout>  
+          </v-form>           
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -93,10 +95,10 @@
           <span class="headline" v-else-if="approve_user">Approve User</span>
         </v-card-title>
         <v-card-text v-if="block_user">
-          <v-span>Are you sure you want to block {{ editedItem.display_name }}</v-span>
+          <v-span>Are you sure you want to block {{ editedItem.display_name }}?</v-span>
         </v-card-text>
         <v-card-text v-else-if="un_block_user">
-          <v-span>Are you sure you want to Unblock {{ editedItem.display_name }}</v-span>
+          <v-span>Are you sure you want to unblock {{ editedItem.display_name }}?</v-span>
         </v-card-text>
         <v-card-text v-else-if="approve_user">         
           <v-form ref="form" v-model="valid" lazy-validation>
@@ -107,17 +109,17 @@
             </v-radio-group>
             </v-flex>         
           </v-form> 
-          <small>*indicates required field</small>
+          <small>*Indicates required fields</small>
         </v-card-text>
         <v-card-actions v-if="block_user">
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" flat @click.native="dialog_edit = false">No</v-btn>
-          <v-btn color="red accent-3" flat @click.native="changeStatus(editedItem._id, 'blocked')">Block</v-btn>
+          <v-btn color="red accent-3" flat @click.native="changeStatus(editedItem._id, 'Blocked')">Block</v-btn>
         </v-card-actions>
         <v-card-actions v-else-if="un_block_user">
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" flat @click.native="dialog_edit = false">No</v-btn>
-          <v-btn color="red accent-3" flat @click.native="changeStatus(editedItem._id, 'approved')">Unblock</v-btn>
+          <v-btn color="red accent-3" flat @click.native="changeStatus(editedItem._id, 'Approved')">Unblock</v-btn>
         </v-card-actions>
         <v-card-actions v-else>
           <v-spacer></v-spacer>
@@ -213,7 +215,7 @@
         headers: [
           { text: 'First Name', align: 'center', value: 'first_name', width: '20%'},
           { text: 'Last Name', align: 'center', value: 'last_name', width: '20%'},
-          { text: 'User Name', align: 'center', value: 'display_name', width: '25%'},
+          { text: 'Username', align: 'center', value: 'display_name', width: '25%'},
           { text: 'Status' , align: 'center', value: 'account_status', width: '15%'},
           { text: 'Actions', value: '' , align: 'center' , width: '20%'}
         ],
@@ -246,7 +248,7 @@
     },    
     computed: {
       invitation_link () {        
-        return 'https://tbot-web-rtc.herokuapp.com/register/' + this.organization_id;
+        return 'https://tbot-web-rtc.herokuapp.com/register?organizationId=' + this.organization_id;
       },
       getToken() {
         return this.$store.getters.getToken;
@@ -269,11 +271,11 @@
       editItem (item) {        
         this.editedIndex = this.users.indexOf(item)
         this.editedItem = Object.assign({}, item)
-        if(this.editedItem.account_status == 'approved'){
+        if(this.editedItem.account_status == 'Approved'){
           this.block_user = true;
           this.un_block_user = false;
           this.approve_user = false;
-        }else if(this.editedItem.account_status == 'blocked'){
+        }else if(this.editedItem.account_status == 'Blocked'){
           this.un_block_user = true;
           this.block_user = false;
           this.approve_user = false;
@@ -293,17 +295,30 @@
         if (this.$refs.form.validate()) {         
           let uri = functions.getApiPath() + 'approveUser';             
           axios({ method: 'post', url: uri, headers: { Authorization: this.token}, 
-                data: {'id' : id, 'account_status' :'approved', 'account_type' : this.account_type}
+                data: {'id' : id, 'account_status' :'Approved', 'account_type' : this.account_type}
           }).then((response) => {
             this.dialog_edit = false
-            this.addNotification(id, 'Welcome', 'Your account is approved, you can use the bots now, Enjoy !')
+            this.addNotification(id, 'Welcome', 'Your account has been approved. You can use the bots now. Enjoy!')
             if(response.data == 'OK'){
               this.snackbar_color = 'success'
               this.snackbar_text = 'Account Approved'  
-              this.fetchUsers();           
+              this.fetchUsers();  
+              // Sent an email notification
+              let uri = functions.getApiPath() + 'sendEmail'; 
+              axios({ method: 'post', url: uri, data: {
+                'email' : this.editedItem.email, 
+                'subject' : 'Account Approved', 
+                'text': 'Hello,\n\n' +'Please note that your account has been successfully approved!'}
+              }).then((response) => {  
+                if(response.data == 'OK'){  
+                  this.snackbar_color = 'success'
+                  this.snackbar_text = 'Email notification sent'
+                  this.snackbar = true
+                }
+              });          
             }else{
               this.snackbar_color = 'error'
-              this.snackbar_text = 'Something went wrong !'   
+              this.snackbar_text = 'Something went wrong!'   
             }
             this.snackbar = true                    
           })
@@ -315,18 +330,18 @@
               data: {'id' : id, 'account_status' : status}
         }).then((response) => {
           let type, desc;          
-          status == 'blocked' ? 
-                    (type = 'Account Blocked', desc = 'Admin of the system have blocked your account') : 
-                    (type = 'Welcome back', desc = 'Admin of the system have unblocked your account')          
+          status == 'Blocked' ? 
+                    (type = 'Account Blocked', desc = 'Admin of the system has blocked your account') : 
+                    (type = 'Welcome Back!', desc = 'Admin of the system has unblocked your account')          
           this.addNotification(id, type, desc)
           this.dialog_edit = false
           if(response.data == 'OK'){
             this.snackbar_color = 'success'
-            this.snackbar_text = 'Account Status Changed'  
+            this.snackbar_text = 'Account status changed'  
             this.fetchUsers();           
           }else{
             this.snackbar_color = 'error'
-            this.snackbar_text = 'Something went wrong !'   
+            this.snackbar_text = 'Something went wrong!'   
           }
           this.snackbar = true                    
         })
@@ -342,10 +357,21 @@
         axios({ method: 'post', url: uri, data: data})
       },
       sendEmailInvitation() {
-        this.snackbar_color = 'success'
-        this.snackbar_text = 'Email Invitation Sent'
-        this.snackbar = true
-        this.dialog_invite = false
+        if (this.$refs.form.validate()) {
+          let uri = functions.getApiPath() + 'sendEmail'; 
+          axios({ method: 'post', url: uri, data: {
+            'email' : this.email, 
+            'subject' : 'Invitation to use the Telepresence Robot Service', 
+            'text': 'Hi,\n\n' +'We would like to invite you to become a user of the Telepresence Robot service. Register now to start collaborating!'}
+          }).then((response) => {  
+            if(response.data == 'OK'){  
+              this.snackbar_color = 'success'
+              this.snackbar_text = 'Email invitation sent'
+              this.snackbar = true
+              this.dialog_invite = false
+            }
+          }); 
+        } 
       },
       copyLink () {
         const el = document.createElement('textarea');
@@ -354,6 +380,7 @@
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);       
+        this.snackbar_color = 'success'
         this.snackbar_text = 'Link Copied'
         this.snackbar = true
         this.dialog_invite = false

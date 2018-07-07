@@ -3,7 +3,7 @@
     <v-alert
       :value="blocked"
       type="error">
-      Account Blocked ! You cannot use any Bot
+      Account Blocked! You cannot use any Bot.
     </v-alert>
     <v-layout child-flex v-if="!blocked">
         <v-data-table
@@ -119,7 +119,7 @@
           this.user = response;
           this.user.account_type == 'admin' ? this.admin = true : this.admin = false;            
           this.organization_id = this.user.organization_id;
-          if(this.user.account_status == 'blocked'){
+          if(this.user.account_status == 'Blocked'){
             this.blocked = true;
           }else{            
             this.fetchRobots();
@@ -152,7 +152,7 @@
           }          
           axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: data}).then((response) => {
               if(response.data == 'Name Mismatch'){
-                this.error_msg = "Bot Name doesn\'t match with one given when setting up the bot"
+                this.error_msg = "Bot Name doesn\'t match with the one given when setting up the bot"
                 this.alert = true
               }else if(response.data == 'OK'){
                 this.dialog_add_bot = false;

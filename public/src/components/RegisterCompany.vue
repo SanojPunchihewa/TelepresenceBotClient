@@ -6,7 +6,7 @@
           <v-dialog v-model="dialog" persistent max-width="290">            
             <v-card>
               <v-card-title class="headline">Registration Complete</v-card-title>
-              <v-card-text>Thanks for registering for our service, Please use the Sign In Option to use the service</v-card-text>
+              <v-card-text>Thank you for registering for our service. Please use the Sign In option to use the service</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="green darken-1" flat @click.native="close">Take me to Sign In</v-btn>
@@ -75,7 +75,7 @@
                             <v-alert :value="alert" type="error" transition="scale-transition">
                             {{error_msg}}
                             </v-alert>
-                            <small>*indicates required field</small>
+                            <small>*Indicates required fields.</small>
                         </v-layout>                  
                             <!-- <v-checkbox
                             v-model="checkbox"
@@ -102,7 +102,7 @@
                             </v-flex>
                             </v-layout>
                         </v-form>           
-                        <small>*indicates required field</small>                                                            
+                        <small>*Indicates required fields</small>                                                            
                     </v-card>
                     <v-btn color="primary" @click.native="submitOrganizationAccount">Continue</v-btn>
                 </v-stepper-content>               
@@ -153,15 +153,15 @@
       alert: false,
       organizationName: '',
       organizationNameRules: [
-        v => !!v || 'Orgaization Name is required'
+        v => !!v || 'Orgaization name is required'
       ],
       robotId: '',
       robotIdRules: [
-        v => !!v || 'Robot Id is required'
+        v => !!v || 'Robot ID is required'
       ],
       robotName: '',
       robotNameRules: [
-        v => !!v || 'Robot Name is required'
+        v => !!v || 'Robot name is required'
       ],
     }),
 
@@ -196,7 +196,7 @@
             mobile_phone: this.mobilephone,
             office_phone: this.officephone,
             account_type: 'admin',
-            account_status: 'approved',
+            account_status: 'Approved',
             password: this.password,
             organization_id: '0000'
           }).then((response) => {   

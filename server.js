@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
 var axios = require('axios');
+
 const route = require('./api/routes/dbQueryRoutes');
 
 const serverPath = "http://localhost:8080/";
@@ -17,7 +18,7 @@ const serverPath = "http://localhost:8080/";
 // Connect to MongoDB
 //mongoose.connect('mongodb://localhost:27017/telepresenceRobot');
 mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
-
+//mongoose.connect('mongodb://localhost:27017/tbotdb');
 mongoose.connection.on('connected', () => {
     console.log('Connected to MongoDB');    
 })

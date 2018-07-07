@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default {
     getApiPath(){
-      return 'https://tbot-web-rtc.herokuapp.com/api/';
+      return 'http://localhost:8080/api/'; //https://tbot-web-rtc.herokuapp.com/api/';
     },
     getTimeInfo(context, time_stamp) {
         var today = context.$moment();
@@ -23,7 +23,7 @@ export default {
         return last_used_time; 
     },
     fetchUser(token) {
-        let uri = 'https://tbot-web-rtc.herokuapp.com/api/getUser' //'http://localhost:8080/api/getUser';
+        let uri = 'http://localhost:8080/api/getUser'; //https://tbot-web-rtc.herokuapp.com/api/getUser' //'http://localhost:8080/api/getUser';
         //var authHeader = 'Bearer ' + token;        
         return new Promise(function(resolve){
             axios({ method: 'post', url: uri, headers: { Authorization: token}}).then((response) => {
