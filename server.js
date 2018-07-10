@@ -15,8 +15,8 @@ const route = require('./api/routes/dbQueryRoutes');
 const serverPath = "http://localhost:8080/";
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/telepresenceRobot');
-//mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
+//mongoose.connect('mongodb://localhost:27017/telepresenceRobot');
+mongoose.connect('mongodb://admin:admin1234@ds147450.mlab.com:47450/telepresence');
 
 mongoose.connection.on('connected', () => {
     console.log('Connected to MongoDB');    
@@ -50,7 +50,7 @@ app.post('/robotData', (request, response) => {
 });
 
 var paths = ['/', '/dashboard', '/register', '/registerCompany', '/pendingApproval', 
-            '/login', '/profile', '/video-stream/', '/notifications', '/users',
+            '/login', '/profile', '/bot-info', '/video-stream', '/notifications', '/users',
             '/organization', '/upload', '/forgotPassword', '/notfound'];
 
 app.get(paths, (req, res, next) => {    

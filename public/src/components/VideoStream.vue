@@ -11,14 +11,14 @@
                 <v-btn fab dark color="red" @click="endStreaming">
                     <v-icon dark>call_end</v-icon>
                 </v-btn>
-                <v-btn fab dark color="teal" @click.stop="isVideoEnabled = !isVideoEnabled" @click="toggleCamera">
+                <!-- <v-btn fab dark color="teal" @click.stop="isVideoEnabled = !isVideoEnabled" @click="toggleCamera">
                     <v-icon dark v-if="isVideoEnabled">videocam_off</v-icon>
                     <v-icon dark v-else>videocam</v-icon>
                 </v-btn>
                 <v-btn fab dark color="teal" @click.stop="isAudioEnabled = !isAudioEnabled" @click="toggleMic">
                     <v-icon dark v-if="isAudioEnabled">mic_off</v-icon>
                     <v-icon dark v-else>mic</v-icon>
-                </v-btn>
+                </v-btn> -->
             </div>
         </div>
     </v-layout>    
@@ -74,20 +74,24 @@
 </style>
 
 <script>
+  import axios from 'axios';
+  import functions from './functions'
   export default {
     data: () => ({      
       drawer: false,
       time: 0,
       isVideoEnabled: true,
       isAudioEnabled: true,
-      robotId: "",
+      chatRoomId: '',
       controlMsgTimer: 0,
       forward: [60, 60, 60, 60, 30, 30],
-      steering:[0, 30, -30, 0, 30, -30]
+      steering:[0, 30, -30, 0, 30, -30],
+      token: '',
+      user: {}
     }),
     methods: {
         connect() {
-            easyrtc.setUsername("sanoj95");
+            easyrtc.setUsername(this.user.display_name);
             easyrtc.setVideoDims();
             easyrtc.enableDebug(false);
             easyrtc.enableDataChannels(true);
@@ -95,6 +99,7 @@
             easyrtc.setDataChannelCloseListener(this.channelCloseListener);
             easyrtc.setPeerListener(this.saddToConversation);            
             easyrtc.setRoomOccupantListener(this.convertListToButtons);
+            // Change room Name to chatRoomId
             easyrtc.easyApp("easyrtc.videoChatHd", this.$refs.selfVideo.id, [this.$refs.callerVideo.id], this.loginSuccess, this.loginFailure);
         },
         channelCloseListener(easyrtcid){
@@ -113,36 +118,12 @@
             console.log(who + " - " + content)
         },
         convertListToButtons (roomName, data, isPrimary) {
-
             var context = this;
-
             for(var easyrtcid in data) {
-
                 if(easyrtc.idToName(easyrtcid)){//== "robot-one"
                 this.robotId = easyrtcid;
                 console.log(easyrtc.idToName(easyrtcid));
-
-                // var button = document.getElementById('btnStart');
-                // button.className = "callButton";
-                // button.disabled = false;
-
-                // button.onclick = function(easyrtcid) {
-                //     return function() {
-                //         if(button.innerHTML == "Start"){
-                //             context.performCall(easyrtcid);
-                //         }
-                //     };
-                // }(easyrtcid);
-
                 context.performCall(easyrtcid);
-
-                //var buttonSendData = document.getElementById('btnSendMsg');
-
-                // buttonSendData.onclick = function(easyrtcid) {
-                //     return function() {
-                //         this.sendStuffP2P(easyrtcid);
-                //     };
-                // }(easyrtcid);
                 }
             }
         },
@@ -268,13 +249,18 @@
             }
         }
     },
-    props: {
-        chatRoomId: {
-            type: String,
-            default: 'My-Bot'
-        }
+    beforeMount() {
+      if(this.$router.app._route.query.chatRoomId){
+        this.chatRoomId = this.$router.app._route.query.chatRoomId;       
+      }else{
+        window.location.href = "/notfound";
+      }
     },
     mounted: function(){
+        this.token = 'Bearer ' + this.getToken;
+        functions.fetchUser(this.token).then((response) => {
+            this.user = response;
+        })
         console.log('Video-Stream created ! ' + this.chatRoomId);  
         this.connect();
         window.addEventListener('keydown', this.moveSelection);        
@@ -284,6 +270,11 @@
         easyrtc.hangupAll(); 
         easyrtc.closeLocalMediaStream();    
         easyrtc.disconnect();
+    },
+    computed: {
+      getToken() {
+        return this.$store.getters.getToken;
+      }
     }
   }
 </script>

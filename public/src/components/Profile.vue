@@ -1,94 +1,114 @@
 <template>
-  <v-container grid-list-md text-xs-center>
-    <v-dialog v-model="dialog" max-width="500px">      
+  <v-container>
+    <v-dialog v-model="dialogUpdate" max-width="500px">      
+      <v-card>
+        <v-card-title>
+          <span v-if="updateInfo" class="headline">Update Info</span>
+          <span v-else class="headline">Remove Account</span>
+        </v-card-title>
+        <v-card-text v-if="updateInfo">
+          <v-span>Are you sure to update your profile?</v-span>          
+        </v-card-text>
+        <v-card-text v-else>
+          <v-span style="color:red">Once you have removed your account you cannot use our service</v-span>
+          <v-form ref="form" lazy-validation>
+            <v-text-field prepend-icon="person" :rules="userNameRules" name="userName" label="Username" type="text" v-model="rev_username" required></v-text-field>
+            <v-text-field :rules="passwordRules" prepend-icon="lock" name="password" label="Password" v-model="rev_password" type="password" required></v-text-field>
+            <v-alert :value="alert" type="error" transition="scale-transition">
+              {{error_msg}}
+            </v-alert>    
+          </v-form>  
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat @click.native="dialogUpdate = false">No</v-btn>
+          <v-btn v-if="updateInfo" color="red accent-3" flat @click.native="update">Update</v-btn>
+          <v-btn v-else color="red accent-3" flat @click.native="deleteUser">Remove Account</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogUpdatePass" max-width="500px">      
       <v-card>
         <v-card-title>
           <span class="headline">Change Password</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="form" lazy-validation>
-            <v-text-field id="passwordOld" :rules="passwordRules" prepend-icon="lock" name="password" label="Current Password" v-model="passwordOld" type="password" required></v-text-field>
-            <v-text-field id="passwordNew" :rules="passwordRules" prepend-icon="lock" name="password" label="New Password" v-model="passwordNew" type="password" required></v-text-field>
+            <v-text-field :rules="passwordRules" prepend-icon="lock" name="password" label="Current Password" v-model="passwordOld" type="password" required></v-text-field>
+            <v-text-field :rules="passwordRules" prepend-icon="lock" name="password" label="New Password" v-model="passwordNew" type="password" required></v-text-field>
             <v-alert :value="alert" type="error" transition="scale-transition">
               {{error_msg}}
             </v-alert>
             <v-flex md12 class="text-xs-center">
-              <v-btn color="blue" dark @click="dialog = false">Change Password</v-btn>
+              <v-btn color="blue" dark @click="updatePassword">Change Password</v-btn>
             </v-flex>       
           </v-form>   
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-layout row wrap>      
-      <v-flex xs12 sm4>
+    <v-layout align-center justify-center>
+      <v-flex xs12 sm8 md8>
         <v-card>
-          <v-card-text class="px-0">
-            <v-avatar
-            :tile="User"
-            :size="150">
-            <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="avatar">
-            </v-avatar>
-            <br>
-            <br>
-            <h2>John Leider</h2>
-            <h4>@{{ organization }}</h4>
+          <v-card-text>
+            <v-layout row wrap>
+              <v-flex xs12 sm12 class="text-xs-center">
+                 <v-avatar
+                :tile="User"
+                :size="150">
+                <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="avatar">
+                </v-avatar>
+                <br>
+                <br>
+                <h2>{{ full_name }}</h2>
+                <h4>@{{ organization }}</h4>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-text-field disabled v-model="first" box label="First Name"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-text-field disabled v-model="last" box label="Last Name"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-text-field
+                disabled
+                :rules="emailRules"
+                v-model="email"
+                box
+                label="Email Address"
+                persistent-hint
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-text-field disabled v-model="username" box label="UserName"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-text-field v-model="officenumber" box label="Office Phone"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-text-field v-model="mobilenumber" box label="Mobile Phone"></v-text-field>
+              </v-flex>
+              <v-flex mb-4 xs12 class="text-xs-center">
+                <v-btn outline color="warning" @click="dialogUpdate = true, updateInfo = true">Update Profile</v-btn>
+                <v-divider></v-divider>
+              </v-flex>              
+              <v-flex sm6 xs12 class="text-xs-center">
+                <v-btn dark outline color="blue" @click="dialogUpdatePass = true">Change Password</v-btn>
+              </v-flex>  
+              <v-flex sm6 xs12 class="text-xs-center">
+                <v-btn outline color="error" @click="dialogUpdate = true, updateInfo = false">Remove Account</v-btn>
+              </v-flex>
+            </v-layout>
           </v-card-text>
-        </v-card>
-      </v-flex>      
-      <v-flex xs12 sm8>
-        <v-card align-center>
-          <v-card-text class="px-0">              
-              <v-container grid-list-md>
-                <v-layout row wrap align-center>
-                <v-flex xs12 sm6>
-                    <v-text-field v-model="first" box label="First Name"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6>
-                    <v-text-field v-model="last" box label="Last Name"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6>
-                    <v-text-field
-                    :rules="emailRules"
-                    v-model="email"
-                    box
-                    label="Email address"
-                    hint="Enter your email!"
-                    persistent-hint
-                    ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6>
-                    <v-text-field v-model="username" box label="User Name"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6>
-                    <v-text-field v-model="officenumber" box label="Office Phone"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6>
-                    <v-text-field v-model="mobilenumber" box label="Mobile Phone"></v-text-field>
-                </v-flex>
-                <v-flex xs12>
-                    <v-text-field v-model="bio" box multi-line label="Bio"></v-text-field>
-                </v-flex>
-                <v-flex xs12 class="text-xs-center">
-                    <v-btn round color="warning" @click="print">Update Profile</v-btn>
-                </v-flex>                
-                </v-layout>
-              </v-container>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex xs12>
-        <v-card>
-          <v-layout row wrap>
-            <v-flex sm6 xs12 class="text-xs-center">
-              <v-btn dark round color="blue" @click="showDialog">Change Password</v-btn>
-            </v-flex>  
-            <v-flex sm6 xs12 class="text-xs-center">
-              <v-btn round color="error">Remove Account</v-btn>
-            </v-flex>
-          </v-layout>          
         </v-card>
       </v-flex>
     </v-layout>
+    <v-snackbar
+    v-model="snackbar"
+    bottom     
+    :color="snackbar_color"
+    :timeout="3000">
+    {{ snackbar_text }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -97,8 +117,13 @@
   import functions from './functions'
   export default {
     data: () => ({
+      snackbar: false,
+      snackbar_text: '',
+      snackbar_color: '',
       user: {},
-      dialog: false,
+      dialogUpdate: false,
+      updateInfo: true,
+      dialogUpdatePass: false,
       first: '',
       last: '',
       email: '',
@@ -108,13 +133,21 @@
       mobilenumber: '',
       organization_id: '',
       organization: '',
+      rev_username: '',
+      userNameRules: [
+        v => {
+          return !!v || 'Username is required'
+        }
+      ],
+      rev_password: '',
       emailRules: [
         v => {
           return !!v || 'E-mail is required'
         },
         v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
       ],
-      password: "",
+      passwordOld: "",
+      passwordNew: "",
       passwordRules: [
         v => !!v || 'Password is required'
       ],
@@ -122,29 +155,85 @@
       alert: false,
       token: '',
     }),
-    watch: {
-      dialog (val) {
-        val || this.close()
-      }
-    },
     methods: {
-      print(){
-        console.log(this.first);
+      update(){
+        let uri = functions.getApiPath() + 'updateUser'; 
+         var data = {
+            'id': this.user._id,
+            'office_phone': this.officenumber,
+            'mobile_phone': this.mobilenumber
+          }      
+        axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: data}).then((response) => {
+          if(response.data == 'OK'){
+            this.snackbar_text = 'Profile Updated'
+            this.snackbar_color = 'success'
+          }else{
+            this.snackbar_text = 'Someting went wrong'
+            this.snackbar_color = 'error'
+          }
+          this.dialogUpdate = false
+          this.snackbar = true;
+        })
       },
-      showDialog(){        
-        this.dialog = true
+      updatePassword(){       
+        if (this.$refs.form.validate()) {
+          let uri = functions.getApiPath() + 'updatePassword';       
+          var data = {
+            'id': this.user._id,
+            'old_password': this.passwordOld,
+            'new_password': this.passwordNew
+          }
+          axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: data}).then((response) => {
+            if(response.data == 'Password_Error'){
+              this.error_msg = "Password won't match"
+              this.alert = true
+            }else{
+              if(response.data == 'OK'){
+                this.snackbar_text = 'Password Updated'
+                this.snackbar_color = 'success'
+              }else{
+                this.snackbar_text = 'Someting went wrong'
+                this.snackbar_color = 'error'
+              }
+              this.dialogUpdatePass = false
+              this.snackbar = true;
+            }
+          })
+        }
       },
-      close () {
-        this.dialog = false
-        setTimeout(() => {
-          
-        }, 300)
+      deleteUser() {
+        if (this.$refs.form.validate()) {
+          let uri = functions.getApiPath() + 'deleteUser';     
+           var data = {
+            'id': this.user._id,
+            'password': this.rev_password,
+            'username': this.rev_username
+          }  
+          axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: data}).then((response) => {
+            if(response.data == 'No_User_Found'){
+              this.error_msg = "Incorrect Username"
+              this.alert = true
+            }else if(response.data == 'Password_Error'){
+              this.error_msg = "Incorrect Password"
+              this.alert = true
+            }else{
+              if(response.data == 'OK'){
+                this.$store.dispatch('logout');
+                window.location.href = "/login";
+              }else{
+                this.snackbar_text = 'Someting went wrong'
+                this.snackbar_color = 'error'
+              }
+              this.dialogUpdate = false
+              this.snackbar = true;
+            }
+          })   
+        }       
       },
       fetchOrganization() {
-        let uri = functions.getApiPath() + 'getOrganization';
-        //var token = 'Bearer ' + this.getToken;        
+        let uri = functions.getApiPath() + 'getOrganization';       
         axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'organization_id' : this.organization_id}}).then((response) => {
-            this.organization = response.data.organization_name;
+          this.organization = response.data.organization_name;
         })
       }
     },
@@ -165,6 +254,9 @@
     computed: {
       getToken() {
         return this.$store.getters.getToken;
+      },
+      full_name() {
+        return (this.user.first_name + " " + this.user.last_name)
       }
     }
   }

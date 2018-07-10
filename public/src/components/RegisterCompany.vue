@@ -6,7 +6,7 @@
           <v-dialog v-model="dialog" persistent max-width="290">            
             <v-card>
               <v-card-title class="headline">Registration Complete</v-card-title>
-              <v-card-text>Thanks for registering for our service, Please use the Sign In Option to use the service</v-card-text>
+              <v-card-text>Thank you for registering for our service. Please use the Sign In option to use the service</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="green darken-1" flat @click.native="close">Take me to Sign In</v-btn>
@@ -75,7 +75,7 @@
                             <v-alert :value="alert" type="error" transition="scale-transition">
                             {{error_msg}}
                             </v-alert>
-                            <small>*indicates required field</small>
+                            <small>*Indicates required fields.</small>
                         </v-layout>                  
                             <!-- <v-checkbox
                             v-model="checkbox"
@@ -102,7 +102,7 @@
                             </v-flex>
                             </v-layout>
                         </v-form>           
-                        <small>*indicates required field</small>                                                            
+                        <small>*Indicates required fields</small>                                                            
                     </v-card>
                     <v-btn color="primary" @click.native="submitOrganizationAccount">Continue</v-btn>
                     <v-btn color="error" @click.native="cancelAccount">Cancel Registration</v-btn>
@@ -154,15 +154,15 @@
       alert: false,
       organizationName: '',
       organizationNameRules: [
-        v => !!v || 'Orgaization Name is required'
+        v => !!v || 'Orgaization name is required'
       ],
       bot_id: '',
       robotIdRules: [
-        v => !!v || 'Bot Id is required'
+        v => !!v || 'Bot ID is required'
       ],
       bot_name: '',
       robotNameRules: [
-        v => !!v || 'Bot Name is required'
+        v => !!v || 'Bot name is required'
       ],
     }),
 

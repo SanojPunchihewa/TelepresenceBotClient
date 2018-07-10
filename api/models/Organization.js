@@ -10,6 +10,14 @@ var organization = new mongoose.Schema({
   organization_owner_id: {
     type: String,
     required: true
+  },
+  number_of_users: {
+    type: String,
+    required: true
+  },
+  number_of_bots: {
+    type: String,
+    required: true
   }
 },
 {

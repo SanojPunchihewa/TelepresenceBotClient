@@ -37,8 +37,7 @@
                         value=""
                         multi-line
                       ></v-text-field>
-                    </v-flex>
-                    
+                    </v-flex>                    
                     <v-flex class="pad"  md10 sm5 xs12>
                       <h3>Account</h3>
                     </v-flex>
@@ -62,19 +61,11 @@
                           :counter="15"
                           required
                         ></v-text-field>
-                   
-                    <!-- <v-flex class="pad" md10 sm5 xs12>
-                      <h3>Choose an account type</h3>
-                      <v-radio-group v-model="accounttype" :mandatory="false">
-                        <v-radio label="User" value="user"></v-radio>
-                        <v-radio label="Admin" value="admin"></v-radio>
-                      </v-radio-group>
-                    </v-flex> -->
-
+                    </v-flex>
                     <v-alert :value="alert" type="error" transition="scale-transition">
                     {{error_msg}}
                     </v-alert> 
-                   <small>*indicates required field</small>
+                   <small>*Indicates required fields</small>
                    <v-card-text>
                     <v-flex xs10 offset-xs1>
                       <v-btn block color="success" @click="submit">Register</v-btn>

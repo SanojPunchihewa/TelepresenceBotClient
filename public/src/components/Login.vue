@@ -19,13 +19,19 @@
                   <v-flex md12 class="text-xs-right">                  
                     <router-link  
                     :class="$style.link"
-                    :to="'forgotPassword'">Forgot Password ?</router-link>
+                    :to="'forgotPassword'">Forgot your password?</router-link>
                   </v-flex>
                   <v-alert :value="alert" type="error" transition="scale-transition">
                     {{error_msg}}
                   </v-alert>
                   <v-flex md12 class="text-xs-center">
-                    <v-btn style="width:50%" color="light-blue accent-2" dark @click="login">Login</v-btn>
+                    <v-btn 
+                      style="width:50%" 
+                      :loading="loading"
+                      :disabled="loading" 
+                      color="light-blue accent-2" 
+                      dark 
+                      @click="login">Login</v-btn>
                   </v-flex>       
                 </v-form>                         
                 <v-flex style="margin-top:5px" md12 class="text-xs-center">
@@ -48,6 +54,7 @@
   import functions from './functions'
   export default {    
     data: () => ({
+      loading: false,
       drawer: null,
       email: "",
       emailRules: [
@@ -62,11 +69,15 @@
       alert: false,     
     }),
     methods: {
-      login(){    
+      login(){
+        this.error_msg = ""
+        this.alert = false
         if (this.$refs.form.validate()) {
+          this.loading = true;
           let uri = functions.getApiPath() + 'login';
           var user = {"email":this.email, "password":this.password};
-          axios.post(uri, user).then((response) => {           
+          axios.post(uri, user).then((response) => {  
+            this.loading = false;         
             if(response.data.success){
               this.$store.dispatch("login", {
                 token: response.data.token
@@ -77,10 +88,10 @@
               this.error_msg = "Incorrect Password"
               this.alert = true;
             }else if(response.data == 'No_User_Found'){
-              this.error_msg = "No account found, Check your email or Sign Up"
+              this.error_msg = "No account found. Check your email or Sign Up"
               this.alert = true;
             }else if(response.data == 'Not_Approved'){
-              this.error_msg = "Sorry, your account is not approved yet !"
+              this.error_msg = "Sorry, your account is not approved yet!"
               this.alert = true;
             }
           });

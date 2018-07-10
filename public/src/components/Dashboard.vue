@@ -3,21 +3,23 @@
     <v-alert
       :value="blocked"
       type="error">
-      Account Blocked ! You cannot use any Bot
+      Account Blocked! You cannot use any Bot
     </v-alert>
     <v-layout child-flex v-if="!blocked">
         <v-data-table
         :headers="headers"
         :items="robots"
+        :loading="loading"
         hide-actions
         class="elevation-1"
         >
+        <v-progress-linear slot="progress" color="cyan" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
         <td>{{ props.item.robot_name }}</td>
         <td class="text-xs-center">{{ props.item.robot_status }}</td>
         <td class="text-xs-center">{{ props.item.battery_level }}</td>
-        <td class="text-xs-center">     <!--//props.item._id-->
-          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" @click="loadVideoStreaming('CE_GROUND_FLOOR')">Connect</v-btn>
+        <td class="text-xs-center">
+          <v-btn v-if="props.item.robot_status == 'Available'" outline color="indigo" @click="loadVideoStreaming(props.item._id)">Connect</v-btn>
           <v-btn v-else disabled>Cannot Connect</v-btn>
         </td>
         <td class="text-xs-center" v-if="admin">
@@ -78,6 +80,7 @@
   export default {
     data () {
       return {        
+        loading: true,
         blocked: false,
         snackbar: false,
         snackbar_text: '',
@@ -129,15 +132,16 @@
       fetchRobots() {
         let uri = functions.getApiPath() + 'allRobots';                   
         axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'organization_id' : this.organization_id}}).then((response) => {
-            this.robots = response.data;            
+            this.robots = response.data;         
+            this.loading = false;   
         })
       },
       moreInfo(bot_id){
-        var path = '/bot-info/' + bot_id;
+        var path = '/bot-info?botId=' + bot_id;
         this.$router.push(path)
       },
       loadVideoStreaming(bot_id){
-        var path = '/video-stream/' + bot_id;
+        var path = '/video-stream?chatRoomId=' + bot_id;
         this.$router.push(path);
       },
       addNewRobot() {
@@ -151,7 +155,7 @@
           }          
           axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: data}).then((response) => {
               if(response.data == 'Name Mismatch'){
-                this.error_msg = "Bot Name doesn\'t match with one given when setting up the bot"
+                this.error_msg = "Bot Name doesn\'t match with the one given when setting up the bot"
                 this.alert = true
               }else if(response.data == 'OK'){
                 this.dialog_add_bot = false;

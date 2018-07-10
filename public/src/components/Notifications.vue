@@ -23,7 +23,7 @@
               </v-layout>
               <v-layout row wrap>                
                 <v-flex xs12 sm6 md6>
-                  <v-text-field v-model="editedItem.display_name" label="User Name" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.display_name" label="UserName" disabled></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md6>
                   <v-text-field v-model="editedItem.email" label="Email Address" disabled></v-text-field>
@@ -81,7 +81,9 @@
       <v-data-table
         :headers="headers"
         :items="notifications"
+        :loading="loading"
         :search="search">
+        <v-progress-linear slot="progress" color="cyan" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <tr v-bind:class="{ read: (props.item.is_read == 'true') }">
           <td @click="editItem(props.item)">{{ props.item.notification }}</td>
@@ -132,6 +134,7 @@
   export default {
     data () {
       return {
+        loading: true,
         show_snackBar_btn:false,
         snackbar: false,
         snackbar_text: '',
@@ -217,6 +220,7 @@
             full_date: full_date
           })
         })
+        this.loading = false;
       },
       fetchAdminNotifications() {
         let uri = functions.getApiPath() + 'getAdminNotification';       
@@ -234,16 +238,16 @@
         let read;
         if(item.is_read == 'true'){
           read = 'false'
-          this.snackbar_text = 'Marked as Unread'
+          this.snackbar_text = 'Marked as unread'
         }else{
           read = 'true'
-          this.snackbar_text = 'Marked as Read'
+          this.snackbar_text = 'Marked as read'
         }       
         let uri = functions.getApiPath() + 'updateNotification';       
         axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'notification_id': item._id, 'is_read' : read}}).then((response) => {
             console.log(response.data)
             if(response.data == 'ERR'){
-              this.snackbar_text = 'Something Went Wrong'
+              this.snackbar_text = 'Something went wrong'
             }
             this.snackbar = true
         })
@@ -260,6 +264,19 @@
               uri = functions.getApiPath() + 'updateNotification';       
               axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'notification_id': item._id, 'is_read' : 'true'}})
               this.fetchUsers();           
+              // Sent an email notification
+              let uri = functions.getApiPath() + 'sendEmail'; 
+              axios({ method: 'post', url: uri, data: {
+                'email' : this.editedItem.email, 
+                'subject' : 'Account Approved', 
+                'text': 'Hello,\n\n' +'Please note that your account has been successfully approved!'}
+              }).then((response) => {  
+                if(response.data == 'OK'){  
+                  this.snackbar_color = 'success'
+                  this.snackbar_text = 'Email notification sent'
+                  this.snackbar = true
+                }
+              });   
             }else{
               this.snackbar_text = 'Something went wrong !'   
             }

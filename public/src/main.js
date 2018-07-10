@@ -73,7 +73,7 @@ const routes = [
         beforeEnter: requireAuth
       },
       {
-        path: 'video-stream/:botId',
+        path: 'video-stream',
         component: VideoStreamView,
         name: 'Video Streaming',
         meta: {description: 'p2p video streaming with the robot'},
@@ -81,7 +81,7 @@ const routes = [
         beforeEnter: requireAuth
       },
       {
-        path: 'bot-info/:botId',
+        path: 'bot-info',
         component: BotInfoView,
         name: 'Bot Info',
         meta: {description: 'Details about the Bot'},

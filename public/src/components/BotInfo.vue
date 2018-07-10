@@ -4,14 +4,14 @@
         <v-flex xs12 sm6 md6>
           <v-card>
             <v-card-text>
-              <span style="font-weight:300" class="title">Bot Name : {{ robot.robot_name }}</span>
+              <span style="font-weight:300" class="title">Bot Name: {{ robot.robot_name }}</span>
             </v-card-text>
           </v-card>
         </v-flex>
         <v-flex xs12 sm6 md6>
           <v-card>
             <v-card-text>
-              <span style="font-weight:300" class="title">Bot Id : {{ botId }}</span>
+              <span style="font-weight:300" class="title">Bot Id: {{ botId }}</span>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -55,7 +55,9 @@
         <v-data-table         
           hide-headers
           :items="last_used"
+          :loading="loadingLastUsed"
           item-key="display_name">
+          <v-progress-linear slot="progress" color="cyan" indeterminate></v-progress-linear>
           <template slot="items" slot-scope="props">          
             <tr @click="props.expanded = !props.expanded">
               <td>{{ props.item.display_name }}</td>
@@ -78,7 +80,9 @@
       </v-card-title>
       <v-data-table         
         hide-headers
+        :loading="loadingLogs"
         :items="logs">
+        <v-progress-linear slot="progress" color="cyan" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <td class="text-xs-left" >{{ props.item.log_message }}</td>     
           <td class="text-xs-right" >{{ props.item.date }}</td>              
@@ -95,23 +99,24 @@
   import axios from 'axios';
   import functions from './functions'
   export default {
-    data: () => ({         
+    data: () => ({     
+      loadingLastUsed: true,
+      loadingLogs: true,    
       robot: {},
       logs: [],
       last_used: [],
-      token: ''
+      token: '',
+      botId: ''
     }), 
     methods: {      
       fetchBot() {
-        let uri = functions.getApiPath() + 'getRobot';
-        //var token = 'Bearer ' + this.getToken;        
+        let uri = functions.getApiPath() + 'getRobot';      
         axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'bot_id' : this.botId}}).then((response) => {
             this.robot = response.data;            
         })
       },
       fetchLogs() {
-        let uri = functions.getApiPath() + 'getRobotLog';
-        //var token = 'Bearer ' + this.getToken;        
+        let uri = functions.getApiPath() + 'getRobotLog';      
         axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'bot_id' : this.botId}}).then((response) => {
             response.data.forEach(element => {
               var time_stamp = new Date(parseInt( element._id.toString().substring(0,8), 16 ) * 1000 )
@@ -124,11 +129,11 @@
                 log_data: element.log_data
               })
             })
+            this.loadingLogs = false;
         })
       },
       fetchLastUsed() {
-        let uri = functions.getApiPath() + 'getRobotLastUsed';
-        //var token = 'Bearer ' + this.getToken;        
+        let uri = functions.getApiPath() + 'getRobotLastUsed';           
         axios({ method: 'post', url: uri, headers: { Authorization: this.token}, data: {'bot_id' : this.botId}}).then((response) => {
             response.data.forEach(element => {                          
               var time_stamp = new Date(parseInt( element._id.toString().substring(0,8), 16 ) * 1000 )
@@ -140,20 +145,23 @@
                 date: last_used_time,
                 full_date: full_date
               })
-            });            
+            });        
+            this.loadingLastUsed = false    
         })
       }
     },
     created: function() {       
-      this.token = 'Bearer ' + this.getToken;
-      this.fetchBot();
-      this.fetchLastUsed();
-      this.fetchLogs();
+      if(this.$router.app._route.query.botId){
+        this.botId = this.$router.app._route.query.botId;       
+        this.token = 'Bearer ' + this.getToken;
+        this.fetchBot();
+        this.fetchLastUsed();
+        this.fetchLogs();
+      }else{
+        window.location.href = "/notfound";
+      }     
     },
     computed: {
-      botId () {
-        return this.$route.params.botId
-      },
       getToken() {
         return this.$store.getters.getToken;
       }
