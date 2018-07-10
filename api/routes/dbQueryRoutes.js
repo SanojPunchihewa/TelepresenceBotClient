@@ -661,38 +661,35 @@ dbQueryRoutes.route('/sendEmail').post(verifyToken, function(req, res){
     if(err) {
      res.sendStatus(403);
     } else {
-      // Generate test SMTP service account from ethereal.email
-      // Only needed if you don't have a real mail account for testing
-      nodemailer.createTestAccount((err, account) => {
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: 'i63oojsi4cs2xxw4@ethereal.email', // generated ethereal user
-                pass: 'fuNDPf5FRAEHNgYQ1q' // generated ethereal password
-            },
-            tls: {rejectUnauthorized: false}
-        });
-
-        // Setup email data with unicode symbols
-        let mailOptions = {
-            from: 'no-reply@tbotwebapplication.com', // Sender address
-            to: req.body.email, // List of receivers
-            subject: req.body.subject,  // Subject line
-            text: req.body.text // Plain text body`
-        };
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return console.log(error);
-            }
-            res.send('OK');
-            //console.log('Email sent to:', req.body.email);
-        });
+      // Create reusable transporter object using the default SMTP transport
+      let transporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false, // true for 465, false for other ports
+          requireTLS: true,
+          auth: {
+              user: 'i63oojsi4cs2xxw4@ethereal.email', 
+              pass: 'fuNDPf5FRAEHNgYQ1q' 
+          },
+          tls: {rejectUnauthorized: false}
       });
+
+      // Setup email data with unicode symbols
+      let mailOptions = {
+          from: 'no-reply@tbotwebapplication.com', // Sender address
+          to: req.body.email, // List of receivers
+          subject: req.body.subject,  // Subject line
+          text: req.body.text // Plain text body`
+      };
+
+      // Send mail with defined transport object
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+          }
+          res.send('OK');
+          //console.log('Email sent to:', req.body.email);
+      }); 
     }
   })
 })
