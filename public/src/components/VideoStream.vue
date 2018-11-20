@@ -78,6 +78,7 @@
   import functions from './functions'
   export default {
     data: () => ({      
+      sequence: 0,
       drawer: false,
       time: 0,
       isVideoEnabled: true,
@@ -87,7 +88,13 @@
       forward: [60, 60, 60, 60, 30, 30],
       steering:[0, 30, -30, 0, 30, -30],
       token: '',
-      user: {}
+      user: {},
+      keys: {
+          up: false,
+          down: false,
+          left: false,
+          right: false
+      }
     }),
     methods: {
         connect() {
@@ -206,34 +213,118 @@
         startTimer() {            
             this.interval = setInterval(this.setTime, 1000);
         },
-        leftKeyPressed(){                        
-            //this.increament();            
+        leftKeyPressed(){
+            var opcode = this.sequence + "," + "left";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
         },
         rightKeyPressed(){
-            console.log('Right');           
+            var opcode = this.sequence + "," + "right";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
         },
         upKeyPressed(){
-            console.log('Up');               
+            var opcode = this.sequence + "," + "up";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
         },
         downKeyPressed(){
-            console.log('Down');                
-        },        
+            var opcode = this.sequence + "," + "down";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
+        },       
+        upleftKeyPressed(){
+            var opcode = this.sequence + "," + "up-left";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
+        }, 
+        uprightKeyPressed(){
+            var opcode = this.sequence + "," + "up-right";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
+        }, 
+        downleftKeyPressed(){
+            var opcode = this.sequence + "," + "down-left";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
+        }, 
+        downrightKeyPressed(){
+            var opcode = this.sequence + "," + "down-right";
+            this.sendStuffP2P(opcode);
+            this.sequence = (this.sequence + 1)%200;
+            console.log(opcode);
+        }, 
         moveSelection(evt) {
             switch (evt.keyCode) {
                 case 37:
-                this.leftKeyPressed();               
+                    //this.leftKeyPressed();
+                    this.keys.left = true;
                 break;
                 case 39:
-                this.rightKeyPressed();
+                    //this.rightKeyPressed();
+                    this.keys.right = true;
                 break;
                 case 38:
-                this.upKeyPressed();
+                    //this.upKeyPressed();
+                    this.keys.up = true;
                 break;
                 case 40:
-                this.downKeyPressed();
+                    //this.downKeyPressed();
+                    this.keys.down = true;
                 break;
             }
+            if(this.keys.up && (!this.keys.left | !this.keys.right)){
+                this.upKeyPressed();
+            }
+            if(this.keys.down && (!this.keys.left | !this.keys.right)){
+                this.downKeyPressed();
+            }
+            if(this.keys.left){
+                this.leftKeyPressed();
+            }
+            if(this.keys.right){
+                this.rightKeyPressed();
+            }
+            if(this.keys.up && this.keys.left){
+                this.upleftKeyPressed();
+            }
+            if(this.keys.up && this.keys.right){
+                this.uprightKeyPressed();
+            }
+            if(this.keys.down && this.keys.left){
+                this.downleftKeyPressed();
+            }
+            if(this.keys.down && this.keys.right){
+                this.downrightKeyPressed();
+            }
         },       
+        releaseSelection(evt) {
+            switch (evt.keyCode) {
+                case 37:
+                    //this.leftKeyPressed();
+                    this.keys.left = false;
+                break;
+                case 39:
+                    //this.rightKeyPressed();
+                    this.keys.right = false;
+                break;
+                case 38:
+                    //this.upKeyPressed();
+                    this.keys.up = false;
+                break;
+                case 40:
+                    //this.downKeyPressed();
+                    this.keys.down = false;
+                break;
+            }
+        },
         doSomeThing(count){
             var command = 'drive,' + this.forward[count] + ',' + this.steering[count];
             this.sendStuffP2P(command);
@@ -262,14 +353,15 @@
             this.user = response;
         })
         console.log('Video-Stream created ! ' + this.chatRoomId);  
-        this.connect();
-        window.addEventListener('keydown', this.moveSelection);        
+        //this.connect();
+        window.addEventListener('keydown', this.moveSelection);
+         window.addEventListener('keyup', this.releaseSelection);
     },
     beforeDestroy: function(){
         console.log('Video-Stream destroyed !');        
-        easyrtc.hangupAll(); 
-        easyrtc.closeLocalMediaStream();    
-        easyrtc.disconnect();
+        //easyrtc.hangupAll(); 
+        //easyrtc.closeLocalMediaStream();    
+        //easyrtc.disconnect();
     },
     computed: {
       getToken() {

@@ -275,7 +275,7 @@ dbQueryRoutes.route('/allRobots').post(verifyToken, function (req, res, next) {
 })
 
 // create a bot
-dbQueryRoutes.route('/addRobot').post(verifyToken, function (req, res) {
+dbQueryRoutes.route('/addRobot').post(verifyToken, function (req, res) { //
   jwt.verify(req.token, '$e(r82ke?', (err, authData) => {    
     if(err) {
       res.sendStatus(403);
